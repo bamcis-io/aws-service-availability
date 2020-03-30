@@ -1,0 +1,60 @@
+<div>
+  <div class="datatableheader">
+    <mat-form-field floatPlaceholder="never" id="resultsFilterContainer">
+      <input matInput #filter placeholder="Filter services" />
+    </mat-form-field>
+  </div>
+
+  <mat-table id="datatable" #datatable [dataSource]="resultDataSource" matSort>
+
+    <ng-container cdkColumnDef="Index">
+      <mat-header-cell *cdkHeaderCellDef>Index</mat-header-cell>
+      <mat-cell *cdkCellDef="let i = index">{{this.paginator.pageIndex == 0 ?  i + 1 : i + 1 + this.paginator.pageIndex * this.paginator.pageSize}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Service">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Service</mat-header-cell>
+      <mat-cell *cdkCellDef="let result">{{result.Service}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Region">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Region</mat-header-cell>
+      <mat-cell *cdkCellDef="let result">{{result.Region}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Date">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Date</mat-header-cell>
+      <mat-cell *cdkCellDef="let result">{{result.Date * 1000 | date:"shortDate"}}, {{result.Date * 1000 | date:"shortTime"}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Began">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Began</mat-header-cell>
+      <mat-cell *cdkCellDef="let result">{{result.Began * 1000 | date:"shortDate"}}, {{result.Began * 1000 | date:"shortTime"}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Ended">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Ended</mat-header-cell>
+      <mat-cell *cdkCellDef="let result">{{result.Ended * 1000 | date:"shortDate"}}, {{result.Ended * 1000 | date:"shortTime"}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="ElapsedTime">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Elapsed Seconds</mat-header-cell>
+      <mat-cell *cdkCellDef="let result">{{result.ElapsedTime}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Summary">
+      <mat-header-cell *cdkHeaderCellDef>Summary</mat-header-cell>
+      <mat-cell *cdkCellDef="let result">{{result.Summary}}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row mat-row-height="fit" *cdkRowDef="let result; columns: displayedColumns;" (click)="openResultDescription(result.Description)"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator
+                [length]="resultDataSource.data.length"
+                [pageIndex]="0"
+                [pageSize]="25"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+</div>

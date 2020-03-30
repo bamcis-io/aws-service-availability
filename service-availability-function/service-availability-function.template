@@ -1,0 +1,642 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Transform" : "AWS::Serverless-2016-10-31",
+  "Description" : "AWS Service Availability serverless application.",
+
+  "Parameters" : {
+    "AdminEmail" : {
+	  "Description" : "The email address of an admin to email when a Regex miss occurs. Leave blank to not set up an SNS topic.",
+	  "Type" : "String"
+	},
+	"AllowedIPRange" : {
+	  "Description" : "The IP range that is allowed to access the API.",
+	  "Type" : "String",
+	  "Default" : "174.77.2.0/24"
+	},
+	"SharedSecret" : {
+	   "Type" : "String",
+	   "Description" : "A shared secret that will be used to ensure only the Cloudfront distribution can access the S3 website content.",
+	   "Default" : "074c0914-ab7b-4604-895a-369b0731b5d8"
+	}
+  },
+
+  "Conditions" : {
+    "UseSNS" : {
+	   "Fn::Not" : [
+	     {
+	       "Fn::Equals" : [
+		     {
+			   "Ref" : "AdminEmail"
+		     },
+		     ""
+		   ]
+		 }
+	   ]
+     },
+	"UseConfig" : {
+	   "Fn::And" : [
+	     {
+	       "Fn::Not" : [
+	         {
+		       "Fn::Equals" : [
+		         {
+			       "Ref" : "ConfigBucket"
+			     },
+			     ""
+		       ]
+		     }
+	       ]
+	     },
+	     {
+	       "Fn::Not" : [
+	         {
+		       "Fn::Equals" : [
+		         {
+			       "Ref" : "ConfigKey"
+			     },
+			     ""
+		       ]
+		     }
+	       ]
+	     }
+	   ]
+     }
+  },
+
+  "Resources" : {
+
+    "WebsiteBucket" : {
+	  "Type" : "AWS::S3::Bucket",
+	  "Properties" : {
+	   "BucketName" : "aws-service-availability",
+	   "WebsiteConfiguration" : {	 
+	    "IndexDocument" : "index.html",
+	    "RoutingRules" : [
+		  {
+		    "RoutingRuleCondition" : { 
+			  "HttpErrorCodeReturnedEquals" : "404"
+			},
+			 "RedirectRule" : {
+			   "ReplaceKeyWith" : ""
+			 }
+		  }
+		]
+	   }
+	  }
+	},
+	"BucketPolicy" : {
+	  "Type" : "AWS::S3::BucketPolicy",
+	  "Properties" : {
+	   "Bucket" : {
+	     "Ref" : "WebsiteBucket"
+	   },
+	    "PolicyDocument" : {
+		  "Version":"2012-10-17",
+		  "Statement":[
+			{
+			  "Sid": "Allow get requests originating from Cloudfront only.",
+			  "Effect":"Allow",
+			  "Principal": {
+			    "AWS" : "*"
+			  },
+			  "Action":"s3:GetObject",
+			  "Resource": [
+				  {
+					"Fn::Sub" : "arn:${AWS::Partition}:s3:::${WebsiteBucket}/*"
+				  }
+			  ],
+			  "Condition":{
+				"StringEquals":{
+				  "aws:Referer":[
+					{
+						"Ref" : "SharedSecret"
+					}
+				  ]
+				}
+			  }
+			}
+		  ]
+		}
+	  }
+	},
+
+	"SNSTopic" : {
+	 "Condition" : "UseSNS",
+	  "Type" : "AWS::SNS::Topic",
+	   "Properties" : {
+	    "DisplayName" : "Service Availability Regex Misses",
+		 "Subscription" : [
+		   {
+		    "Protocol" : "email",
+			"Endpoint" : {
+			 "Ref" : "AdminEmail"
+			} 
+		   }
+		 ]
+	   }
+	},
+
+    "ServiceAvailabilityLambdaRole" : {
+      "Type" : "AWS::IAM::Role",
+        "Properties" : {
+	      "AssumeRolePolicyDocument" : {
+            "Version" : "2012-10-17",
+            "Statement" : [
+              {
+                "Effect" : "Allow",
+                "Principal" : {
+                  "Service" : [
+                    "lambda.amazonaws.com"
+                  ]
+                },
+                "Action"    : [
+                  "sts:AssumeRole"
+                ]
+             }
+          ]
+        }
+	  }
+	},
+
+    "LambdaCWLPolicy" : {
+	  "Type" : "AWS::IAM::ManagedPolicy",
+	  "Properties" : {
+	    "PolicyDocument" : {
+	      "Version" : "2012-10-17",
+          "Statement" : [
+		    {
+			  "Effect" : "Allow",
+			  "Action" : [
+			    "logs:CreateLogStream",
+			    "logs:CreateLogGroup",
+			    "logs:DescribeLogStreams",
+			    "logs:PutLogEvents",
+			    "logs:DescribeLogGroups"
+			  ],
+			  "Resource" : [
+			    {
+			      "Fn::Join" : [
+				    "",
+				    [
+					  "arn:aws:logs:*:",
+					  {
+					    "Ref" : "AWS::AccountId"
+					  },
+					  ":*"
+				    ]
+			      ]
+		        }
+		      ]
+		    }
+		  ]
+	    },                       
+	    "Roles" : [
+	      {
+		    "Ref" : "ServiceAvailabilityLambdaRole"
+	      }	
+	    ]
+	  },
+	  "Description" : "Allows AWS Lambda to write CloudWatch Logs."
+    },
+	"LambdaSNSPolicy" : {
+	 "Condition" : "UseSNS",
+	 "Type" : "AWS::IAM::ManagedPolicy",
+	 "Properties" : {
+	    "PolicyDocument" : {
+	      "Version" : "2012-10-17",
+          "Statement" : [
+		    {					
+				"Effect" : "Allow",
+				"Action" : [
+					"sns:Publish"
+				],
+				"Resource" : [
+				  {
+					"Ref" : "SNSTopic"
+				  }
+				]	
+		    }
+		  ]
+		},                       
+	  "Roles" : [
+		{
+			"Ref" : "ServiceAvailabilityLambdaRole"
+		}	
+	  ]
+	 },
+	  "Description" : "Allows AWS Lambda to publish to an SNS Topic."
+	},
+	"LambdaSSMPolicy" : {
+	 "Condition" : "UseConfig",
+	 "Type" : "AWS::IAM::ManagedPolicy",
+	 "Properties" : {
+	    "PolicyDocument" : {
+	      "Version" : "2012-10-17",
+          "Statement" : [
+		    {					
+				"Effect" : "Allow",
+				"Action" : [
+					"ssm:GetParameter"
+				],
+				"Resource" : [
+				  {
+					 "Fn::Sub" : "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${TimeZoneMap}"
+				  },
+				  {
+					 "Fn::Sub" : "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${GlobalServicesList}"
+				  },
+				  {
+					 "Fn::Sub" : "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${DefaultTimeZone}"
+				  },
+				  {
+					 "Fn::Sub" : "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${ServiceHealthDashboardDataUrl}"
+				  }
+				]	
+		    }
+		  ]
+		},                       
+	  "Roles" : [
+		{
+			"Ref" : "ServiceAvailabilityLambdaRole"
+		}	
+	  ]
+	 },
+	  "Description" : "Allows AWS Lambda to get specific SSM parameters."
+	},
+	
+	"ApiGateway" : {
+	  "Type" : "AWS::Serverless::Api",
+	  "Properties" : {
+	    "StageName" : "Prod",
+		"DefinitionBody" : {
+		  "swagger" : "2.0",
+		  "info" : {
+		    "version" : "1.0",
+			"title" : "ServiceAvailabilityApiGateway"
+		  },
+		  "host": "",
+		  "basePath" : "/Prod",
+		  "schemes" : [
+		    "https"
+		  ],
+		  "paths" : {
+		    "/api/serviceavailability" : {
+			  "get" : {
+				"parameters" : [
+				  {
+				    "name" : "start",
+					"in" : "query",
+					"required" : false,
+					"type" : "string"
+				  },
+				  {
+				    "name" : "regions",
+					"in" : "query",
+					"required" : false,
+					"type" : "string"
+				  },
+				  {
+				    "name" : "services",
+					"in" : "query",
+					"required" : false,
+					"type" : "string"
+				  },
+				  {
+				    "name" : "end",
+					"in" : "query",
+					"required" : false,
+					"type" : "string"
+				  }
+				],
+				"responses": {
+				},
+				"x-amazon-apigateway-integration": {
+				  "uri": {
+				    "Fn::Sub" : "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Get.Arn}/invocations"
+				  },
+				  "passthroughBehavior": "when_no_match",
+				  "httpMethod": "POST",
+				  "type": "aws_proxy"
+				}
+			  },
+			  "options": {
+				"consumes": [
+				  "application/json"
+				],
+				"produces": [
+				  "application/json"
+				],
+				"responses": {
+				  "200": {
+					"description": "200 response",
+					"headers": {
+					  "Access-Control-Allow-Origin": {
+						"type": "string"
+					  },
+					  "Access-Control-Allow-Methods": {
+						"type": "string"
+					  },
+					  "Access-Control-Allow-Headers": {
+						"type": "string"
+					  }
+					}
+				  }
+				},
+				"x-amazon-apigateway-integration": {
+				  "responses": {
+					"default": {
+					  "statusCode": 200,
+					  "responseParameters": {
+						"method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+						"method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-Content-Sha256,X-Amz-User-Agent,Accept'",
+						"method.response.header.Access-Control-Allow-Origin": "'*'"
+					  }
+					}
+				  },
+				  "requestTemplates": {
+					"application/json": "{\"statusCode\": 200}"
+				  },
+				  "passthroughBehavior": "when_no_match",
+				  "type": "mock"
+				}
+			  }
+			}
+		  }
+		}
+	  }
+	},
+
+    "Get" : {
+      "Type" : "AWS::Serverless::Function",
+      "Properties": {
+	    "FunctionName" : "ServiceAvailability",
+		"Description" : "Retrieves SLA metrics from the AWS Service Health Dashboard.",
+        "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::Get",
+        "Runtime":  "dotnetcore2.1",
+        "CodeUri": "",
+        "MemorySize": 128,
+        "Timeout": 120,
+        "Role": {
+			"Fn::GetAtt" : ["ServiceAvailabilityLambdaRole", "Arn"]
+		},
+        "Policies": null,
+        "Events": {
+			"GetData": {
+				"Type": "Api",
+				"Properties": {
+					"Path": "/api/serviceavailability",
+					"Method": "GET",
+					 "RestApiId" : {
+					   "Ref" : "ApiGateway"
+					 }
+				}
+			}
+        },
+		"Environment" : {
+		  "Variables" : {
+		    "SNSTopic" : {
+			  "Fn::If" : [
+			    "UseSNS",
+			    {
+				  "Ref" : "SNSTopic"
+				},
+				{
+				  "Ref" : "AWS::NoValue"
+				}
+			  ]
+		    }	
+		  }
+	    }
+	  }
+    },
+	
+	"WAFWebAcl" : {
+	  "Type" : "AWS::WAF::WebACL",
+	  "Properties" : {
+	    "DefaultAction" : {
+	      "Type" : "BLOCK"
+	    },
+		"MetricName" : "AllowInternalNetwork",
+		"Name" : "Allow Internal Network Web ACL",
+		"Rules" : [
+		  {
+		    "Action" : {
+			  "Type" : "ALLOW"
+			},
+		    "Priority" : 1,
+			"RuleId" : {
+			  "Ref" : "WAFRule"
+			}
+		  }
+		]
+	  }
+	},
+
+	"WAFRule" : {
+	  "Type" : "AWS::WAF::Rule",
+	  "Properties" : {
+	    "MetricName" : "AllowInternalNetworkRule",
+		"Name" : "Allow Internal Network Rule",
+		"Predicates" : [
+		  {
+		    "DataId" : {
+			  "Ref" : "WAFIPMatch"
+			},
+			"Negated" : false,
+			"Type" : "IPMatch"
+		  }
+		]
+	  }
+	},
+
+	"WAFIPMatch" : {
+	  "Type" : "AWS::WAF::IPSet",
+	  "Properties" : {
+	    "IPSetDescriptors" : [
+		  {
+		    "Type" : "IPV4",
+		    "Value" : {
+		      "Ref" : "AllowedIPRange"
+		    }
+		  }
+		],
+		"Name" : "Amazon-IPSet"
+	  }
+	},
+
+	"CloudfrontDistribution" : {
+	  "Type" : "AWS::CloudFront::Distribution",
+	  "Properties" : {
+	    "DistributionConfig" : {
+		  "WebACLId" : {
+		    "Ref" : "WAFWebAcl"
+		  },	 
+		"ViewerCertificate" : {
+		 "CloudFrontDefaultCertificate" : true,
+		   "MinimumProtocolVersion" : "TLSv1.2_2018"
+		},
+		"Origins" : [
+		    {
+			  "DomainName" : {
+			    "Fn::Sub" : "${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com"
+			  },
+			  "CustomOriginConfig" : {
+			    "HTTPSPort" : "443",
+				"OriginSSLProtocols" : [
+				   "TLSv1.2"
+				],
+				"OriginProtocolPolicy" : "https-only" 
+			  },
+			  "Id" : "APIGatewayOrigin",
+			  "OriginPath" : "/Prod"
+			},
+			{
+			  "DomainName" : {
+				"Fn::Sub" : "${WebsiteBucket}.s3-website-${AWS::Region}.amazonaws.com"
+			  },
+			  "CustomOriginConfig" : {
+				"HTTPPort" : "80",
+				"OriginProtocolPolicy" :  "http-only"			 
+			  },
+			  "Id" : "WebsiteOrigin",
+			  "OriginPath" : "",			   
+			  "OriginCustomHeaders" : [
+			    {
+			     "HeaderName" : "Referer",
+				 "HeaderValue" : {
+					"Ref" : "SharedSecret"
+				 }
+				}
+			  ]
+			}
+		  ],
+		  "Enabled" : true,
+		  "Comment" : "ServiceAvailability App Distribution",
+		  "DefaultCacheBehavior" : {
+		    "AllowedMethods" : [
+		      "GET",
+			  "HEAD"
+		    ],
+		    "TargetOriginId" : "WebsiteOrigin",
+			"ForwardedValues" : {
+			  "QueryString" : true,
+			  "Cookies" : { 
+			    "Forward" : "all"
+			  }	
+			},
+			"Compress" : true,
+			"ViewerProtocolPolicy" : "redirect-to-https"
+		  },
+		  "CacheBehaviors" : [
+				{
+					"AllowedMethods" : [
+						"DELETE", 
+						"GET", 
+						"HEAD", 
+						"OPTIONS", 
+						"PATCH", 
+						"POST", 
+						"PUT"
+					],
+					"TargetOriginId" : "APIGatewayOrigin",
+					 "Compress" : true,
+				"ForwardedValues" : {
+				  "QueryString" : true,
+				  "Cookies" : { 
+					"Forward" : "all"
+				  }
+				},
+			"PathPattern" : "/api/*",
+			"ViewerProtocolPolicy" : "redirect-to-https"
+			}
+		  ],
+		  "HttpVersion" : "http2",
+		   
+		  "Restrictions" : {
+		    "GeoRestriction" : {
+			  "Locations" : [
+ 			    "US"
+			  ],
+			  "RestrictionType" : "whitelist"
+			}
+		  }
+		}
+	  }
+	},
+
+	"TimeZoneMap" : {
+		"Type" : "AWS::SSM::Parameter",
+		"Properties" : {
+		  "Name" : "TimeZoneMap",
+		  "Type" :  "String",
+		  "Value" : "{\"HAST\": \"-10:00\",\"HADT\": \"-09:00\",\"AKST\": \"-09:00\",\"AKDT\": \"-08:00\",\"PST\": \"-08:00\",\"PDT\": \"-07:00\",\"MST\": \"-07:00\",\"MDT\": \"-06:00\",\"CST\": \"-06:00\",\"CDT\": \"-05:00\",\"EST\": \"-05:00\",\"EDT\": \"-04:00\",\"GMT\": \"-00:00\",\"UTC\": \"-00:00\"}",
+		  "Description" : "A JSON string that maps time zones, like EST to their time offset, like -04:00"
+		}
+	},
+	"GlobalServicesList" : {
+		"Type" : "AWS::SSM::Parameter",
+		"Properties" : {
+		    "Name" : "GlobalServicesList",
+			"Type" : "StringList",
+			"Value" : "management-console,route53,fps,cloudfront,route53domainregistration,chime,awswaf,marketplace,iam,support",
+			"Description" : "A list of services that are considered global and do not have a region"
+		}
+	},
+	"DefaultTimeZone" : {
+		"Type" : "AWS::SSM::Parameter",
+		"Properties" : {
+		    "Name" : "DefaultTimeZone",
+			"Type" : "String",
+			"Value" : "PDT",
+			"Description" : "The default time zone for service availability analysis."
+		}
+	},
+	"ServiceHealthDashboardDataUrl" :{
+		"Type" : "AWS::SSM::Parameter",
+		"Properties" : {
+		    "Name" : "ServiceHealthDashboardDataUrl",
+			"Type" : "String",
+			"Value" : "http://status.aws.amazon.com/data.json",
+			"Description" : "The url to the service health dashboard data"
+		}
+	}
+  },
+
+  "Outputs" : {
+    "APIGatewayUrl" : {
+     "Description" : "The URL to access the new API.",
+	 "Value" : {	
+		"Fn::Sub" : "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/api/serviceavailability"   
+	 }
+   },
+    "ApiCloudfrontUrl" : {
+	  "Description" : "The URL to access the API through Cloudfront.",
+	  "Value" : {
+	    "Fn::Join" : [
+	      "",
+		  [
+		    "https://",
+			{
+			  "Fn::GetAtt" : ["CloudfrontDistribution", "DomainName"]
+			},
+			"/api/serviceavailability"
+		  ]
+		]
+	  }
+    },
+	"WebsiteCloudfrontUrl" : {
+	"Description" : "The URL to access the web front end through Cloudfront.",
+	  "Value" : {
+	    "Fn::Join" : [
+	      "",
+		  [
+		    "https://",
+			{
+			  "Fn::GetAtt" : ["CloudfrontDistribution", "DomainName"]
+			}
+		  ]
+		]
+	  }
+	}
+  }
+}

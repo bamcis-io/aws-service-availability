@@ -1,0 +1,91 @@
+<div>
+  <table style="width:100%;">
+    <tr>
+      <td>
+        <div id="legend" style="text-align:left;">
+          <span style="font-weight:bold;">Legend</span>
+          <div style="font-size:10px;">
+            <div style="display:table;">
+              <span style="display:table-cell;vertical-align:middle"><mat-icon style="color:green;">cloud_done</mat-icon></span>
+              <span style="display:table-cell;vertical-align:middle;padding-left:5px;">Greater than or equal to 99.95%</span>
+            </div>
+            <div style="display:table;">
+              <span style="display:table-cell;vertical-align:middle"><mat-icon style="color:goldenrod;">warning</mat-icon></span>
+              <span style="display:table-cell;vertical-align:middle;padding-left:5px;">Less than 99.95% but greater than or equal to 99.0%</span>
+            </div>
+            <div style="display:table;">
+              <span style="display:table-cell;vertical-align:middle"><mat-icon style="color:red;">error</mat-icon></span>
+              <span style="display:table-cell;vertical-align:middle;padding-left:5px;">Less than 99.0%</span>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td style="text-align:right;">
+        <button type="button" class="btn-primary btn" [disabled]="alertDataSource.data.length == 0" (click)="downloadAlerts()">Download</button>
+      </td>
+    </tr>
+  </table>
+
+  <div class="datatableheader">
+    <mat-form-field floatPlaceholder="never" id="alertsFilterContainer">
+      <input matInput #filter placeholder="Filter services" />
+    </mat-form-field>
+  </div>
+
+  <mat-table id="alertstable" #alertstable [dataSource]="alertDataSource" matSort>
+
+    <ng-container cdkColumnDef="Index">
+      <mat-header-cell *cdkHeaderCellDef>Index</mat-header-cell>
+      <mat-cell *cdkCellDef="let i = index">{{this.paginator.pageIndex == 0 ?  i + 1 : i + 1 + this.paginator.pageIndex * this.paginator.pageSize}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Status">
+      <mat-header-cell *cdkHeaderCellDef>Status</mat-header-cell>
+      <mat-cell *cdkCellDef="let alert">
+        <span *ngIf="alert.availability >= 99.95"><mat-icon style="color:green;">cloud_done</mat-icon></span>
+        <span *ngIf="alert.availability < 99.95 && alert.availability >= 99.0"><mat-icon style="color:goldenrod;">warning</mat-icon></span>
+        <span *ngIf="alert.availability < 99.0"><mat-icon style="color:red;">error</mat-icon></span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Service">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Service</mat-header-cell>
+      <mat-cell *cdkCellDef="let alert">{{alert.service}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Region">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Region</mat-header-cell>
+      <mat-cell *cdkCellDef="let alert">{{alert.region}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Year">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Year</mat-header-cell>
+      <mat-cell *cdkCellDef="let alert">{{alert.year}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Month">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Month</mat-header-cell>
+      <mat-cell *cdkCellDef="let alert">{{ alert.month + "/1/" + alert.year | date:"MMMM"}}</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="TotalDowntime">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>TotalDowntime</mat-header-cell>
+      <mat-cell *cdkCellDef="let alert">{{alert.totalDownTime}}s</mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="Availability">
+      <mat-header-cell *cdkHeaderCellDef mat-sort-header>Availability</mat-header-cell>
+      <mat-cell *cdkCellDef="let alert">{{+alert.availability.toFixed(2)}}%</mat-cell>
+    </ng-container>
+
+    <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row mat-row-height="fit" *cdkRowDef="let alert; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator
+                [length]="alertDataSource.data.length"
+                [pageIndex]="0"
+                [pageSize]="25"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+</div>
