@@ -32,34 +32,6 @@
 		   ]
 		 }
 	   ]
-     },
-	"UseConfig" : {
-	   "Fn::And" : [
-	     {
-	       "Fn::Not" : [
-	         {
-		       "Fn::Equals" : [
-		         {
-			       "Ref" : "ConfigBucket"
-			     },
-			     ""
-		       ]
-		     }
-	       ]
-	     },
-	     {
-	       "Fn::Not" : [
-	         {
-		       "Fn::Equals" : [
-		         {
-			       "Ref" : "ConfigKey"
-			     },
-			     ""
-		       ]
-		     }
-	       ]
-	     }
-	   ]
      }
   },
 
@@ -227,7 +199,6 @@
 	  "Description" : "Allows AWS Lambda to publish to an SNS Topic."
 	},
 	"LambdaSSMPolicy" : {
-	 "Condition" : "UseConfig",
 	 "Type" : "AWS::IAM::ManagedPolicy",
 	 "Properties" : {
 	    "PolicyDocument" : {
@@ -410,57 +381,54 @@
 	  }
     },
 	
-	"WAFWebAcl" : {
-	  "Type" : "AWS::WAF::WebACL",
+	"WAFv2WebAcl" : {
+	  "Type" : "AWS::WAFv2::WebACL",
 	  "Properties" : {
 	    "DefaultAction" : {
-	      "Type" : "BLOCK"
+	      "Block" : {}
 	    },
-		"MetricName" : "AllowInternalNetwork",
-		"Name" : "Allow Internal Network Web ACL",
+		"VisibilityConfig" : {
+		  "CloudWatchMetricsEnabled" : true,
+		  "MetricName" : "InternalNetworkWebACL",
+		  "SampledRequestsEnabled" : false
+		},
+		"Scope" : "CLOUDFRONT",
+		"Name" : "internal-network-web-acl",
 		"Rules" : [
 		  {
-		    "Action" : {
-			  "Type" : "ALLOW"
+			"Action" : {
+			  "Allow" : {}
 			},
-		    "Priority" : 1,
-			"RuleId" : {
-			  "Ref" : "WAFRule"
+			"Name" : "allow-internal-network",
+			"Priority" : 1,
+			"Statement" : {
+			  "IPSetReferenceStatement" : {
+			    "Arn" : {
+			      "Fn::GetAtt" : [ "WAFv2IPMatch", "Arn" ]
+			    }
+			  }
+			},
+			"VisibilityConfig" : {
+			  "CloudWatchMetricsEnabled" : true,
+		      "MetricName" : "AllowInternalNetworkOnly",
+		      "SampledRequestsEnabled" : false
 			}
 		  }
 		]
 	  }
 	},
 
-	"WAFRule" : {
-	  "Type" : "AWS::WAF::Rule",
+	"WAFv2IPMatch" : {
+	  "Type" : "AWS::WAFv2::IPSet",
 	  "Properties" : {
-	    "MetricName" : "AllowInternalNetworkRule",
-		"Name" : "Allow Internal Network Rule",
-		"Predicates" : [
+	    "Addresses" : [
 		  {
-		    "DataId" : {
-			  "Ref" : "WAFIPMatch"
-			},
-			"Negated" : false,
-			"Type" : "IPMatch"
-		  }
-		]
-	  }
-	},
-
-	"WAFIPMatch" : {
-	  "Type" : "AWS::WAF::IPSet",
-	  "Properties" : {
-	    "IPSetDescriptors" : [
-		  {
-		    "Type" : "IPV4",
-		    "Value" : {
-		      "Ref" : "AllowedIPRange"
-		    }
+		      "Ref" : "AllowedIPRange"		    
 		  }
 		],
-		"Name" : "Amazon-IPSet"
+		"IPAddressVersion" : "IPV4",
+		"Name" : "Amazon-IPSet",
+		"Scope" : "CLOUDFRONT"
 	  }
 	},
 
@@ -469,7 +437,7 @@
 	  "Properties" : {
 	    "DistributionConfig" : {
 		  "WebACLId" : {
-		    "Ref" : "WAFWebAcl"
+		    "Fn::GetAtt" : [ "WAFv2WebAcl", "Arn" ]
 		  },	 
 		"ViewerCertificate" : {
 		 "CloudFrontDefaultCertificate" : true,
