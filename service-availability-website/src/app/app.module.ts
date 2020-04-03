@@ -31,6 +31,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { PapaParseModule } from 'ngx-papaparse';
 
@@ -60,11 +61,12 @@ import { PapaParseModule } from 'ngx-papaparse';
       MatPaginatorModule,
       MatMenuModule,
       MatTabsModule,
-	    MatToolbarModule,
-	    MatCardModule,
-	    MatIconModule,
-	    MatFormFieldModule,
-	    MatInputModule
+	  MatToolbarModule,
+	  MatCardModule,
+	  MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressBarModule
   ],
   providers: [
       { provide: 'IRegionService', useClass: RegionService },

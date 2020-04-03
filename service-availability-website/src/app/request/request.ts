@@ -2,10 +2,11 @@ import { IRequestService } from '../services/request.service';
 import { Injectable, Inject } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from './../../environments/environment';
 
 @Injectable()
 export class Request {
-    private url: string = "https://15vcawha7k.execute-api.us-east-1.amazonaws.com/Prod/api/serviceavailability";
+    private url: string = environment.url;
     
     public services: string;
     public regions: string;
