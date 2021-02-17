@@ -1,6 +1,8 @@
 
   <div *ngIf="configLoaded">
-    <router-outlet></router-outlet>
+    <div style="text-align:center">
+      <app-request></app-request>
+    </div>
   </div>
 <div *ngIf="!configLoaded" class="loading-bar">
   <h3>Loading Configuration, Please Wait...</h3>

@@ -17,6 +17,11 @@
 	   "Type" : "String",
 	   "Description" : "A shared secret that will be used to ensure only the Cloudfront distribution can access the S3 website content.",
 	   "Default" : "074c0914-ab7b-4604-895a-369b0731b5d8"
+	},
+	"OIDCStack" : {
+	    "Type" : "String",
+		"Description" : "The name of the stack where the OpenID Connect custom resource provider was created",
+		"Default" : "oidc-idp-provider"	 
 	}
   },
 
@@ -165,7 +170,7 @@
 	    "Roles" : [
 	      {
 		    "Ref" : "ServiceAvailabilityLambdaRole"
-	      }	
+	      }
 	    ]
 	  },
 	  "Description" : "Allows AWS Lambda to write CloudWatch Logs."
@@ -343,7 +348,7 @@
 	    "FunctionName" : "ServiceAvailability",
 		"Description" : "Retrieves SLA metrics from the AWS Service Health Dashboard.",
         "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::Get",
-        "Runtime":  "dotnetcore2.1",
+        "Runtime":  "dotnetcore3.1",
         "CodeUri": "",
         "MemorySize": 128,
         "Timeout": 120,
@@ -567,7 +572,87 @@
 			"Value" : "http://status.aws.amazon.com/data.json",
 			"Description" : "The url to the service health dashboard data"
 		}
-	}
+	},
+
+	"MidwayOpenIDConnectIdp" : {
+		"Type" : "Custom::OpenIDConnectIdp",
+		"Properties" : {
+			"ServiceToken" : {
+				"Fn::ImportValue" : {
+				   "Fn::Sub" : "${OIDCStack}-oidc-idp"
+				}
+			},
+			"Url" : "https://midway-auth.amazon.com",
+			"ClientIDList" : [
+				"https://serviceavailability.bamcis.io",
+				"https://sts.amazon.com",
+				"https://cognito.amazon.com"
+			],
+			"ThumbprintList" : [
+				"9e99a48a9960b14926bb7f3b02e22da2b0ab7280"
+			],
+			"Tags" : [
+				{
+					"Key" : "workload",
+					"Value" : "aws-service-availability"
+				}
+			]
+		}
+	},
+
+	"CognitoRole" : {
+      "Type" : "AWS::IAM::Role",
+        "Properties" : {
+	      "AssumeRolePolicyDocument" : {
+            "Version" : "2012-10-17",
+            "Statement" : [
+              {
+                "Effect" : "Allow",
+                "Principal" : {
+                  "Federated": "cognito-identity.amazonaws.com"
+                },
+                "Action"    : [
+                  "sts:AssumeRoleWithWebIdentity",
+				  "sts:TagSession"
+                ],
+				"Condition": {
+                  "ForAnyValue:StringLike": {
+                    "cognito-identity.amazonaws.com:amr": "authenticated"
+                  }
+                }
+             }
+          ]
+        }
+	  }
+	},
+
+	"CognitoIdentityPool" : {
+		"Type" : "AWS::Cognito::IdentityPool",
+		"Properties" : {
+		    "IdentityPoolName" : "MidwayIdentityPool",
+			"OpenIdConnectProviderARNs" : [
+			    {
+					"Fn::GetAtt" : [ "MidwayOpenIDConnectIdp", "Arn" ]
+				}
+			],
+			"AllowUnauthenticatedIdentities" : false
+		}
+	},
+
+	"IdentityPoolRole" : {
+        "Type" : "AWS::Cognito::IdentityPoolRoleAttachment",
+        "Properties" : {
+          "IdentityPoolId" : {
+		      "Ref" : "CognitoIdentityPool"
+		  },
+          "Roles" : {
+		    "authenticated" : {
+			    "Fn::GetAtt" : [ "CognitoRole", "Arn" ]
+			}
+		  }
+    }
+}
+
   },
 
   "Outputs" : {

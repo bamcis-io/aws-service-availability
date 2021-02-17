@@ -9,7 +9,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
     <ToolsVersionPromptShown>0.0</ToolsVersionPromptShown>
-    <TypeScriptToolsVersion>3.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>4.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -42,11 +42,20 @@
     <Content Include=".editorconfig" />
     <Content Include=".gitignore" />
     <Content Include="angular.json" />
+    <Content Include="appConfig.json" />
     <Content Include="e2e\tsconfig.e2e.json" />
     <Content Include="src\app\alert\alert.component.css">
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\app\alert\alert.component.html" />
+    <Content Include="src\app\logout\logout.component.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="src\app\logout\logout.component.scss">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="src\app\main\main.component.html" />
+    <Content Include="src\app\main\main.component.scss" />
     <Content Include="src\app\result\result.component.css" />
     <Content Include="src\app\result\result.component.html" />
     <Content Include="src\app\services\aws-service.service.ts">
@@ -83,6 +92,8 @@
     <Folder Include="src\" />
     <Folder Include="src\app\" />
     <Folder Include="src\app\alert\" />
+    <Folder Include="src\app\logout\" />
+    <Folder Include="src\app\main\" />
     <Folder Include="src\app\result\" />
     <Folder Include="src\app\services\" />
     <Folder Include="src\app\request\" />
@@ -94,14 +105,23 @@
     <TypeScriptCompile Include="e2e\app.po.ts" />
     <TypeScriptCompile Include="src\app\alert\alert.component.ts" />
     <TypeScriptCompile Include="src\app\alert\alert.ts" />
+    <TypeScriptCompile Include="src\app\app-routing.module.ts" />
     <TypeScriptCompile Include="src\app\app.component.spec.ts" />
     <TypeScriptCompile Include="src\app\app.component.ts" />
     <TypeScriptCompile Include="src\app\app.module.ts" />
     <TypeScriptCompile Include="src\app\alert\alert.datasource.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\auth-callback.component.ts" />
+    <TypeScriptCompile Include="src\app\logout\logout.component.ts" />
+    <TypeScriptCompile Include="src\app\main\main.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\main\main.component.ts" />
     <TypeScriptCompile Include="src\app\result\result.component.ts" />
     <TypeScriptCompile Include="src\app\result\result.datasource.ts" />
+    <TypeScriptCompile Include="src\app\services\auth-guard.service.spec.ts" />
+    <TypeScriptCompile Include="src\app\services\auth-guard.service.ts" />
+    <TypeScriptCompile Include="src\app\services\auth.service.spec.ts" />
+    <TypeScriptCompile Include="src\app\services\auth.service.ts" />
     <TypeScriptCompile Include="src\app\services\aws-service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

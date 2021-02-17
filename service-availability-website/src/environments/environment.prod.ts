@@ -1,4 +1,13 @@
 export const environment = {
   production: true,
-  url : "https://aws-service-availability-api.bamcis.io/api/serviceavailability"
+  url: "",
+  identityPool: "",
+  region: "us-east-1",
+  oidc: {
+    authority: "",
+    redirect_uri: "",
+    client_id: "",
+    logout_redirect_uri: "",
+    name: ""
+  }
 };

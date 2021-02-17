@@ -17,6 +17,7 @@
       "dom"
     ],
     "module": "CommonJS",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "esModuleInterop" :  true
   }
 }
