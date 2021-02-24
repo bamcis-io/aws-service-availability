@@ -7,16 +7,12 @@ import { AppComponent } from './app.component';
 import { RequestComponent } from './request/request.component';
 import { AlertComponent } from './alert/alert.component';
 import { ResultComponent } from './result/result.component';
-import { LogoutComponent } from './logout/logout.component';
-import { AuthCallback } from './auth-callback.component';
 import { MainComponent } from './main/main.component';
 
 import { RegionService } from './services/region.service';
 import { RequestService } from './services/request.service';
 import { AwsServiceService } from './services/aws-service.service';
 import { Request } from './request/request';
-import { AuthGuardService } from './services/auth-guard.service';
-import { AuthService } from './services/auth.service';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -47,9 +43,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     RequestComponent,
     ResultComponent,
     DialogContentComponent,
-    AlertComponent,
-    LogoutComponent,
-    AuthCallback
+    AlertComponent
   ],
   entryComponents: [
     DialogContentComponent
@@ -80,9 +74,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     { provide: 'IRegionService', useClass: RegionService },
     { provide: 'IRequestService', useClass: RequestService },
     { provide: 'IAwsServiceService', useClass: AwsServiceService },
-    Request,
-    AuthGuardService,
-    AuthService
+    Request
   ],
   bootstrap: [AppComponent]
 })

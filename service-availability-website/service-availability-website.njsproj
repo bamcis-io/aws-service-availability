@@ -47,12 +47,6 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\app\alert\alert.component.html" />
-    <Content Include="src\app\logout\logout.component.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="src\app\logout\logout.component.scss">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="src\app\main\main.component.html" />
     <Content Include="src\app\main\main.component.scss" />
     <Content Include="src\app\result\result.component.css" />
@@ -91,7 +85,6 @@
     <Folder Include="src\" />
     <Folder Include="src\app\" />
     <Folder Include="src\app\alert\" />
-    <Folder Include="src\app\logout\" />
     <Folder Include="src\app\main\" />
     <Folder Include="src\app\result\" />
     <Folder Include="src\app\services\" />
@@ -111,16 +104,10 @@
     <TypeScriptCompile Include="src\app\alert\alert.datasource.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\auth-callback.component.ts" />
-    <TypeScriptCompile Include="src\app\logout\logout.component.ts" />
     <TypeScriptCompile Include="src\app\main\main.component.spec.ts" />
     <TypeScriptCompile Include="src\app\main\main.component.ts" />
     <TypeScriptCompile Include="src\app\result\result.component.ts" />
     <TypeScriptCompile Include="src\app\result\result.datasource.ts" />
-    <TypeScriptCompile Include="src\app\services\auth-guard.service.spec.ts" />
-    <TypeScriptCompile Include="src\app\services\auth-guard.service.ts" />
-    <TypeScriptCompile Include="src\app\services\auth.service.spec.ts" />
-    <TypeScriptCompile Include="src\app\services\auth.service.ts" />
     <TypeScriptCompile Include="src\app\services\aws-service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

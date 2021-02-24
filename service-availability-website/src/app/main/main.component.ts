@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from './../../environments/environment';
 
 @Component({
   selector: 'main',
@@ -12,7 +10,7 @@ import { environment } from './../../environments/environment';
 export class MainComponent implements OnInit {
   title = 'AWS Service Availability';
 
-  constructor(private http: HttpClient) {
+  constructor() {
   }
 
   ngOnInit(): void {
