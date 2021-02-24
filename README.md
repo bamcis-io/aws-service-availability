@@ -19,15 +19,7 @@ You will need [`node.js`](https://nodejs.org/) and the [`Angular CLI`](https://c
 ## Getting Started
 First, deploy the Serverless Application Model (SAM) template. You can do this via the [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) or directly through Visual Studio with the AWS Toolkit. The CloudFormation template deploys a CloudFront distribution that points to an API Gateway Endpoint that triggers a Lambda function. It also deploys an AWS WAF that restricts the access to the website and API to an IP address you provide.
 
-The website needs to be configured to point to the API Gateway endpoint that was just deployed. You can do this in 2 ways. The first is to edit the `environment.prod.ts` file and update the `url` parameter with the full path of the `GET` method resource. The other option is to include a file named `appConfig.json` that specifies the url using a format like this:
-
-```json
-{
-  "url" : "https://apig-id.execute-api.us-east-1.amazonaws.com/Prod/api/serviceavailability"
-}
-```
-
-Add the `appConfig.json` file to the root of the website.
+The website needs to be configured to point to the API Gateway endpoint that was just deployed. Edit the `environment.prod.ts` file and update the `url` parameter with the full path of the `GET` method resource.
 
 Once the infrastructure is deployed, go to the folder `service-availability-website` in this solution. Run
 
@@ -35,7 +27,7 @@ Once the infrastructure is deployed, go to the folder `service-availability-webs
 ng build --prod
 ```
 
-This will build the website. Once that is complete, upload the contents of the newly created `dist` folder to the root of the S3 bucket that was created by the CloudFormation template. If you're using the `appConfig.json` file, upload with the website files.
+This will build the website. Once that is complete, upload the contents of the newly created `dist` folder to the root of the S3 bucket that was created by the CloudFormation template. Make the files publicly accessible.
 
 Access the website using the distribution URL provided by Cloudfront, i.e. `https://cf-dist-id.cloudfront.net`. 
 
@@ -79,6 +71,9 @@ The following are items that I might implement.
 4) Send missed regex matches to CloudWatch instead of SNS.
 
 ## Revision History
+
+### 2.0.0
+Updated to Angular 11 with some other updates.
 
 ### 1.0.0-beta.2
 Added dynamic config for API Gateway configuration in the website.
