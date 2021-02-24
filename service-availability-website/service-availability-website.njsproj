@@ -42,7 +42,6 @@
     <Content Include=".editorconfig" />
     <Content Include=".gitignore" />
     <Content Include="angular.json" />
-    <Content Include="appConfig.json" />
     <Content Include="e2e\tsconfig.e2e.json" />
     <Content Include="src\app\alert\alert.component.css">
       <SubType>Code</SubType>
@@ -138,6 +137,9 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\services\region.service.ts" />
     <TypeScriptCompile Include="src\app\services\region.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\environments\environment.local.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />

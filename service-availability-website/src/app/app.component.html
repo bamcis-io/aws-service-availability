@@ -1,8 +1,3 @@
-
-  <div *ngIf="configLoaded">
+  <div>
     <router-outlet></router-outlet>
   </div>
-<div *ngIf="!configLoaded" class="loading-bar">
-  <h3>Loading Configuration, Please Wait...</h3>
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-</div>

@@ -47,6 +47,8 @@ export class AuthService {
   }
 
   private getClientSettings(): UserManagerSettings {
+    console.log("Getting client settings");
+    console.log(environment);
     return {
       authority: environment.oidc.authority,
       client_id: environment.oidc.client_id,
