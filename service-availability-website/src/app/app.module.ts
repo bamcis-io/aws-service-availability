@@ -7,11 +7,14 @@ import { AppComponent } from './app.component';
 import { RequestComponent } from './request/request.component';
 import { AlertComponent } from './alert/alert.component';
 import { ResultComponent } from './result/result.component';
+import { MainComponent } from './main/main.component';
 
 import { RegionService } from './services/region.service';
 import { RequestService } from './services/request.service';
 import { AwsServiceService } from './services/aws-service.service';
 import { Request } from './request/request';
+
+import { AppRoutingModule } from './app-routing.module';
 
 import { DialogContentComponent } from './services/dialog.component';
 
@@ -33,51 +36,50 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
-import { PapaParseModule } from 'ngx-papaparse';
-
 @NgModule({
   declarations: [
-      AppComponent,
-      RequestComponent,
-      ResultComponent,
-      DialogContentComponent,
-      AlertComponent
+    AppComponent,
+    MainComponent,
+    RequestComponent,
+    ResultComponent,
+    DialogContentComponent,
+    AlertComponent
   ],
   entryComponents: [
-      DialogContentComponent
+    DialogContentComponent
   ],
   imports: [
-      BrowserModule,
-      HttpClientModule,
-      FormsModule,
-      BrowserAnimationsModule,
-      PapaParseModule,
-      MatDatepickerModule,
-      MatNativeDateModule,
-      MatTableModule,
-      CdkTableModule,
-      MatDialogModule,
-      MatSortModule,
-      MatPaginatorModule,
-      MatMenuModule,
-      MatTabsModule,
-	  MatToolbarModule,
-	  MatCardModule,
-	  MatIconModule,
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTableModule,
+    CdkTableModule,
+    MatDialogModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatMenuModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    AppRoutingModule
   ],
   providers: [
-      { provide: 'IRegionService', useClass: RegionService },
-      { provide: 'IRequestService', useClass: RequestService },
-      { provide: 'IAwsServiceService', useClass: AwsServiceService },
-      Request
+    { provide: 'IRegionService', useClass: RegionService },
+    { provide: 'IRequestService', useClass: RequestService },
+    { provide: 'IAwsServiceService', useClass: AwsServiceService },
+    Request
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor(overlayContainer: OverlayContainer) {
-        overlayContainer.getContainerElement().classList.add('indigo-pink');
-    }
+  constructor(overlayContainer: OverlayContainer) {
+    overlayContainer.getContainerElement().classList.add('indigo-pink');
+  }
 }

@@ -9,7 +9,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
     <ToolsVersionPromptShown>0.0</ToolsVersionPromptShown>
-    <TypeScriptToolsVersion>3.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>4.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -47,6 +47,8 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\app\alert\alert.component.html" />
+    <Content Include="src\app\main\main.component.html" />
+    <Content Include="src\app\main\main.component.scss" />
     <Content Include="src\app\result\result.component.css" />
     <Content Include="src\app\result\result.component.html" />
     <Content Include="src\app\services\aws-service.service.ts">
@@ -83,6 +85,7 @@
     <Folder Include="src\" />
     <Folder Include="src\app\" />
     <Folder Include="src\app\alert\" />
+    <Folder Include="src\app\main\" />
     <Folder Include="src\app\result\" />
     <Folder Include="src\app\services\" />
     <Folder Include="src\app\request\" />
@@ -94,12 +97,15 @@
     <TypeScriptCompile Include="e2e\app.po.ts" />
     <TypeScriptCompile Include="src\app\alert\alert.component.ts" />
     <TypeScriptCompile Include="src\app\alert\alert.ts" />
+    <TypeScriptCompile Include="src\app\app-routing.module.ts" />
     <TypeScriptCompile Include="src\app\app.component.spec.ts" />
     <TypeScriptCompile Include="src\app\app.component.ts" />
     <TypeScriptCompile Include="src\app\app.module.ts" />
     <TypeScriptCompile Include="src\app\alert\alert.datasource.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\main\main.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\main\main.component.ts" />
     <TypeScriptCompile Include="src\app\result\result.component.ts" />
     <TypeScriptCompile Include="src\app\result\result.datasource.ts" />
     <TypeScriptCompile Include="src\app\services\aws-service.ts">
@@ -118,6 +124,9 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\services\region.service.ts" />
     <TypeScriptCompile Include="src\app\services\region.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\environments\environment.local.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />

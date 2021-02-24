@@ -1,0 +1,214 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description"              : "OpenID Connect Custom Resource",
+    "Parameters"               : {
+    },
+
+    "Resources"                : {
+        "LambdaCWLPolicy" : {
+            "Type" : "AWS::IAM::ManagedPolicy",
+            "Properties" : {
+                "PolicyDocument" : {
+                    "Version" : "2012-10-17",
+                    "Statement" : [
+                        {
+                            "Effect" : "Allow",
+                            "Action" : [
+                                "logs:CreateLogStream",
+                                "logs:CreateLogGroup",
+                                "logs:DescribeLogStreams",
+                                "logs:PutLogEvents",
+                                "logs:DescribeLogGroups"
+                            ],
+                            "Resource" : [
+                                {
+                                    "Fn::Join" : [
+                                        "",
+                                        [
+                                            "arn:aws:logs:*:",
+                                            {
+                                                "Ref" : "AWS::AccountId"
+                                            },
+                                            ":*"
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Roles"          : [
+                    {
+                        "Ref" : "OpenIDConnectIdpCustomResourceExecutionRole"
+                    }
+                ]
+            },
+            "Description" : "Allows AWS Lambda to write CloudWatch Logs."
+        },
+        "OpenIDConnectIdpCustomResourceExecutionRole" : {
+            "Type" : "AWS::IAM::Role",
+            "Properties" : {
+                "AssumeRolePolicyDocument" : {
+                    "Version" : "2012-10-17",
+                    "Statement" : [
+                        {
+                            "Effect" : "Allow",
+                            "Action" : "sts:AssumeRole",
+                            "Principal" : {
+                                "Service" : [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "OpenIDConnectIdpCustomResourcePolicy"        : {
+            "Type" : "AWS::IAM::ManagedPolicy",
+            "Properties" : {
+                "Roles" : [
+                    {
+                        "Ref" : "OpenIDConnectIdpCustomResourceExecutionRole"
+                    }
+                ],
+                "PolicyDocument" : {
+                    "Version" : "2012-10-17",
+                    "Statement" : [
+                        {
+                            "Effect" : "Allow",
+                            "Action" : [
+                                "iam:CreateOpenIDConnectProvider",
+                                "iam:DeleteOpenIDConnectProvider"
+                            ],
+                            "Resource" : {
+                                "Fn::Sub" : "arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/*"
+                            }
+                        },
+                        {
+                            "Effect" : "Allow",
+                            "Action" : [
+                                "iam:ListOpenIDConnectProviders"
+                            ],
+                            "Resource" : "*"
+                        }
+                    ]
+                }
+            }
+        },
+        "OpenIDConnectIdpCustomResource"              : {
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Handler" : "index.lambda_handler",
+                "Runtime" : "python3.8",
+                "Timeout" : 300,
+                "Role"    : {
+                    "Fn::GetAtt" : [
+                        "OpenIDConnectIdpCustomResourceExecutionRole",
+                        "Arn"
+                    ]
+                },
+                "Code"    : {
+                    "ZipFile" : {
+                        "Fn::Join" : [
+                            "\n",
+                            [
+                                "import boto3",
+                                "import cfnresponse",
+                                "from urllib.parse import urlparse",
+                                "",
+                                "iam_client = boto3.client('iam')",
+                                "existing_providers = list()",
+                                "",
+                                "def create(data):",
+                                "   name = get_name_from_url(data['Url'])",
+                                "   if exists(name) == False:",
+                                "       return iam_client.create_open_id_connect_provider(Url = data['Url'], ClientIDList = data['ClientIDList'], ThumbprintList = data['ThumbprintList'])",
+                                "   else:",
+                                "       print('The Open ID Connect provider ' + name + ' already exists')",
+                                "       raise RuntimeError('The Open ID Connect provider ' + name + ' already exists')",
+                                "",
+                                "def list():",
+                                "   response = iam_client.list_open_id_connect_providers()",
+                                "   providers = []",
+                                "   for provider in response['OpenIDConnectProviderList']:",
+                                "       providers.append(provider['Arn'])",
+                                "   return providers",
+                                "",
+                                "def get_name_from_arn(arn):",
+                                "   # arn:aws:iam::742492095699:oidc-provider/midway-auth.amazon.com/",
+                                "   return arn.split(':')[5].replace('oidc-provider/', '')",
+                                "",
+                                "def get_name_from_url(url):",
+                                "   # Per the OIDC standard, path components are allowed but query parameters are not. Typically the URL consists of only a hostname.",
+                                "   o = urlparse(url)",
+                                "   return o.hostname + o.path + o.params",
+                                "",
+                                "def delete(name):",
+                                "   for arn in list():",
+                                "       if get_name_from_arn(arn) == name:",
+                                "           iam_client.delete_open_id_connect_provider(OpenIDConnectProviderArn = arn)",
+                                "           print('Delete of ' + name + ' successful')",
+                                "",
+                                "def exists(name):",
+                                "   for arn in list():",
+                                "       if get_name_from_arn(arn) == name:",
+                                "           return True",
+                                "   return False",
+                                "",
+                                "def update(new_data, old_data):",
+                                "   old_name = get_name_from_url(old_data['Url'])",
+                                "   delete(old_name)",
+                                "   total_iterations = 0",
+                                "   while exists(old_name) == True:",
+                                "       time.sleep(10)",
+                                "       total_iterations += 1",
+                                "       if total_iterations > 10:",
+                                "           raise RuntimeError('Timed out waiting for ' + old_name + ' to delete.')",
+                                "   return create(new_data)",
+                                "",
+                                "def lambda_handler(event, context):",
+                                "   print(event)",
+                                "   physicalResourceId = get_name_from_url(event['ResourceProperties']['Url'])",
+                                "   responseData = {}",
+                                "   try:",
+                                "       if event['RequestType'] == 'Create':",
+                                "           response = create(event['ResourceProperties'])",
+                                "           responseData['Arn'] = response['OpenIDConnectProviderArn']",
+                                "           responseData['Name'] = physicalResourceId",
+                                "       if event['RequestType'] == 'Update':",
+                                "           response = update(event['ResourceProperties'], event['OldResourceProperties'])",
+                                "           responseData['Arn'] = response['OpenIDConnectProviderArn']",
+                                "           responseData['Name'] = physicalResourceId",
+                                "       if event['RequestType'] == 'Delete':",
+                                "           delete(physicalResourceId)",
+                                "       cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, physicalResourceId)",
+                                "   except Exception as ex:",
+                                "       responseData['Message'] = 'Exception during processing'",
+                                "       print(ex)",
+                                "       cfnresponse.send(event, context, cfnresponse.FAILED, responseData, physicalResourceId)"
+                            ]
+                        ]
+                    }
+                }
+            }
+        }   
+    },
+
+    "Outputs"                  : {
+        "FunctionArn" : {
+            "Description" : "The ARN of the function to invoke for the custom resource.",
+            "Value"       : {
+                "Fn::GetAtt" : [
+                    "OpenIDConnectIdpCustomResource",
+                    "Arn"
+                ]
+            },
+            "Export"      : {
+                "Name" : {
+                    "Fn::Sub" : "${AWS::StackName}-oidc-idp"
+                }
+            }
+        }
+    }
+}

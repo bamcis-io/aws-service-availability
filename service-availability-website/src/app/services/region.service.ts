@@ -39,9 +39,11 @@ export class RegionService implements IRegionService {
         { name: "Europe (Ireland)", code: "eu-west-1" },
         { name: "Europe (London)", code: "eu-west-2" },
         { name: "Europe (Paris)", code: "eu-west-3" },
-        { name: "Europe (Stockholm)", code: "eu-north-1" },
+      { name: "Europe (Stockholm)", code: "eu-north-1" },
+      { name: "Europe (Milan)", code: "eu-south-1" },
         { name: "Middle East (Bahrain)", code: "me-sout-1" },
-        { name: "South America (Sao Paulo)", code: "sa-east-1" }
+      { name: "South America (São Paulo)", code: "sa-east-1" },
+      { name: "Africa (Cape Town)", code: "af-south-1" }
     ];
 
     public async getChinaRegions(): Promise<AwsRegion[]> {
