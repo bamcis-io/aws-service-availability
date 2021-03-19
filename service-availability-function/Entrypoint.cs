@@ -57,11 +57,20 @@ namespace BAMCIS.ServiceAvailability
         {
 #if DEBUG
             var chain = new CredentialProfileStoreChain();
-            chain.TryGetAWSCredentials("aws-service-availability", out AWSCredentials profile);
-            ddbClient = new AmazonDynamoDBClient(profile);
-            cwClient = new AmazonCloudWatchClient(profile);
-            ssmClient = new AmazonSimpleSystemsManagementClient(profile);
-            s3Client = new AmazonS3Client(profile);
+            if (chain.TryGetAWSCredentials("aws-service-availability", out AWSCredentials profile))
+            {
+                ddbClient = new AmazonDynamoDBClient(profile);
+                cwClient = new AmazonCloudWatchClient(profile);
+                ssmClient = new AmazonSimpleSystemsManagementClient(profile);
+                s3Client = new AmazonS3Client(profile);
+            }
+            else
+            {
+                ddbClient = new AmazonDynamoDBClient();
+                cwClient = new AmazonCloudWatchClient();
+                ssmClient = new AmazonSimpleSystemsManagementClient();
+                s3Client = new AmazonS3Client();
+            }
 #else
             ddbClient = new AmazonDynamoDBClient();
             cwClient = new AmazonCloudWatchClient();
