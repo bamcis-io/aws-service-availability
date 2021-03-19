@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "AWS Management Console",
+  "summary": "[RESOLVED] Increased Console Error Rates",
+  "date": "1556210754",
+  "status": 2,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\"> 9:50 AM PDT</span>&nbsp;We are currently investigating increased errors for loading the AWS Management Console. Alternate link is available at: <a href=\"https://us-west-2.console.aws.amazon.com/ec2/v2/home\">https://us-west-2.console.aws.amazon.com/ec2/v2/home</a></div><div><span class=\"yellowfg\">10:10 AM PDT</span>&nbsp;We can confirm impact to the AWS Management Console in US-EAST-1 specific to the /home link. AWS services are not impacted, and access to service-specific consoles is working normally. Please use alternate link: <a href=\"https://us-west-2.console.aws.amazon.com/ec2/v2/home\">https://us-west-2.console.aws.amazon.com/ec2/v2/home</a></div><div><span class=\"yellowfg\">11:28 AM PDT</span>&nbsp;We continue to work towards resolution in US-EAST-1 for issues specific to the /home Management Console link. AWS services are not impacted, and access to service-specific consoles is working normally. Please use alternate link: <a href=\"https://us-east-1.console.aws.amazon.com/ec2/v2/home\">https://us-east-1.console.aws.amazon.com/ec2/v2/home</a> and select a service from the Services menu above.</div><div><span class=\"yellowfg\">12:18 PM PDT</span>&nbsp;Between 9:11 AM and 12:13 PM PDT we experienced increased error rates for the AWS Management Console in the US-EAST-1 Region. The issue has been resolved and the service is operating normally. </div>",
+  "service": "management-console"
+}

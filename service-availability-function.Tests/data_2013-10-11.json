@@ -1,0 +1,320 @@
+﻿{
+  "archive": [
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Increased Instance Launch Error Rates",
+      "date": "1378134447",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 8:26 AM PDT</span>&nbsp;We are investigating increased error rates for new instance launches in the US-EAST-1 region.</div><div><span class=\"yellowfg\"> 8:46 AM PDT</span>&nbsp;We are experiencing increased launch error rates for new instance launches into a VPC and are also investigating connectivity issues affecting some instances in the US-EAST-1 region.</div><div><span class=\"yellowfg\"> 9:23 AM PDT</span>&nbsp;We are experiencing increased launch error rates for new instance launches into a VPC. We can confirm connectivity issues affecting some instances in the US-EAST-1 region. We have begun recovery actions. While those complete, some customers will continue to experience launch errors and connectivity issues.</div><div><span class=\"yellowfg\">10:53 AM PDT</span>&nbsp;Between 7:03 AM and 10:04 AM PDT we experienced increased launch error rates and delayed updates for VPC instances in the US-EAST-1 region. Delayed updates impacted VPC configuration changes. Additionally, we experienced intermittent VPC network connectivity issues between some instances.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic MapReduce (Tokyo)",
+      "summary": "[RESOLVED] Elevated error rates. ",
+      "date": "1378226905",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 9:48 AM PDT</span>&nbsp;We are experiencing higher than usual error rates and are investigating. </div><div><span class=\"yellowfg\">10:40 AM PDT</span>&nbsp;Between 9:15AM and 10:17AM PDT, some customers experienced elevated API error rate in the AP-NORTHEAST-1 region.  Running clusters were not affected.  The APIs have recovered and the service is operating normally.   </div>",
+      "service": "emr-ap-northeast-1"
+    },
+    {
+      "service_name": "Amazon Flexible Payments Service",
+      "summary": "Increased Transaction processing latency ",
+      "date": "1378785300",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 8:57 PM PDT</span>&nbsp;We are investigating possible delays in processing credit card transactions in the North American region affecting Instant Payment Notifications (IPN). </div><div><span class=\"yellowfg\"> 9:16 PM PDT</span>&nbsp;We can confirm delays in processing credit card transactions in the North American region affecting Instant Payment Notifications (IPN). We have identified the issue and are working to recover. </div><div><span class=\"yellowfg\">10:28 PM PDT</span>&nbsp;Between 5:50 PM and 9:00 PM PDT, FPS experienced delays in processing credit card transactions in the North American region affecting Instant Payment Notifications (IPN). The issue has been resolved and the service is now operating normally.</div>",
+      "service": "fps"
+    },
+    {
+      "service_name": "Amazon Mechanical Turk (Worker)",
+      "summary": "[RESOLVED] Issues with some Workers purchasing Amazon.com Gift Cards",
+      "date": "1379019055",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 1:51 PM PDT</span>&nbsp;Some Workers may experience issues  purchasing an Amazon.com Gift Card with their Mechanical Turk balance. We are investigating.</div><div><span class=\"yellowfg\"> 2:31 PM PDT</span>&nbsp;We have confirmed that some Workers are unable to purchase Amazon.com Gift Cards with their Mechanical Turk balance. We have identified the issue are working toward a resolution.</div><div><span class=\"yellowfg\"> 4:50 PM PDT</span>&nbsp;Between 09/11/13 10:41 PM and 09/12/13 3:47 PM PDT, we experienced an issue that prevented some Workers from purchasing Amazon.com Gift Cards with their Mechanical Turk balance. The service is now operating normally.</div>",
+      "service": "mturk-worker"
+    },
+    {
+      "service_name": "Amazon Simple Email Service (N. Virginia)",
+      "summary": "[RESOLVED] Elevated VerifyEmailAddress API error rates ",
+      "date": "1379082081",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:23 AM PDT</span>&nbsp;We are currently experiencing elevated VerifyEmailAddress API error rates and are investigating. </div><div><span class=\"yellowfg\"> 8:47 AM PDT</span>&nbsp;We continue to work towards addressing the elevated VerifyEmailAddress API error rates.</div><div><span class=\"yellowfg\"> 8:47 AM PDT</span>&nbsp;We are currently experiencing delays in message delivery and we are investigating.</div><div><span class=\"yellowfg\"> 9:24 AM PDT</span>&nbsp;Amazon SES experienced network connectivity issues for instances in the US-EAST-1 Region from 7:04 AM to 8:54 AM PDT impacting our ability to service traffic for our VerifyEmailAddress API.  The service has recovered and is now operating normally.</div>",
+      "service": "ses-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Network Connectivity",
+      "date": "1379082232",
+      "status": "2",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:32 AM PDT</span>&nbsp;We are investigating network connectivity issues for instances in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 8:07 AM PDT</span>&nbsp;We can confirm network connectivity issues affecting instances in the US-EAST-1 Region. We are also experiencing increased error rates and latencies for the EBS APIs and increased error rates for EBS-backed instance launches.\r\n</div><div><span class=\"yellowfg\"> 8:24 AM PDT</span>&nbsp;We are experiencing network connectivity issues affecting instances in a single Availability Zone in the US-EAST-1 Region. We are also experiencing increased error rates and latencies for the EBS APIs and increased error rates for EBS-backed instance launches.</div><div><span class=\"yellowfg\"> 9:40 AM PDT</span>&nbsp;We identified the cause of the connectivity issues and remediated the issue. Network connectivity has recovered for the vast majority of instances which were impacted in the affected Availability Zone.   We are continuing to validate that all instances are operating normally.  We are also working to resolve the elevated EC2 API latencies.</div><div><span class=\"yellowfg\"> 9:46 AM PDT</span>&nbsp;Between 7:04 AM and 8:54 AM we experienced network connectivity issues affecting a portion of the instances in a single Availability Zone in the US-EAST-1 Region.  Impacted instances were unreachable via public IP addresses, but were able to communicate to other instances in the same Availability Zone using private IP addresses.  Impacted instances may have also had difficulty reaching other AWS services.  We identified the root cause of the issue and full network connectivity had been restored.  We are continuing to work to resolve elevated EC2 API latencies.</div><div><span class=\"yellowfg\">10:04 AM PDT</span>&nbsp;We have resolved the issue causing increased EC2 API error rates and latencies in the US-EAST-1 region.  The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Load Balancing (N. Virginia)",
+      "summary": "[RESOLVED] Connectivity Issues",
+      "date": "1379082778",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:59 AM PDT</span>&nbsp;We are investigating connectivity issues for load balancers in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 8:57 AM PDT</span>&nbsp;We can confirm that connectivity issues for the majority of load balancers have been resolved. Customers with back-end instances in multiple Availability Zones had request traffic shifted away from the affected Availability Zone during the period of impact. We continue to work on recovery for a small number of load balancers in the affected Availability Zone.</div><div><span class=\"yellowfg\"> 9:41 AM PDT</span>&nbsp;We have resolved the connectivity issues affecting load balancers in a single Availability Zone, but continue to investigate increased provisioning times for load balancers in the US-EAST-1 Region.</div><div><span class=\"yellowfg\">10:17 AM PDT</span>&nbsp;Between 7:04 AM and 8:54 AM PDT we experienced network connectivity issues affecting load balancers in a single Availability Zone in the US-EAST-1 Region. Following the networking issue, we experienced increased provisioning times for new load balancers, which did not impact existing load balancers. All issues have been resolved and the service is operating normally.</div>",
+      "service": "elb-us-east-1"
+    },
+    {
+      "service_name": "AWS CloudHSM (N. Virginia)",
+      "summary": "[RESOLVED] Network Connectivity Issues",
+      "date": "1379084368",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 8:04 AM PDT</span>&nbsp;We are currently investigating network connectivity issues in a single Availability Zone (AZ) in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 8:35 AM PDT</span>&nbsp;We can confirm network connectivity issues affecting instances in a single Availability Zone in the US-EAST-1 region and are working to restore connectivity.</div><div><span class=\"yellowfg\"> 9:22 AM PDT</span>&nbsp;Between 7:04 AM and 8:54 AM PDT customers may have experienced network connectivity issues affecting CloudHSM instances in a single Availability Zone. The service is now operating normally.\r\n \r\n</div>",
+      "service": "cloudhsm-us-east-1"
+    },
+    {
+      "service_name": "Amazon Relational Database Service (N. Virginia)",
+      "summary": "[RESOLVED] Network Connectivity",
+      "date": "1379086511",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 8:46 AM PDT</span>&nbsp;We are investigating connectivity issues in a single Availability Zone in the US-EAST-1 region.</div><div><span class=\"yellowfg\"> 9:31 AM PDT</span>&nbsp;We are continuing to investigate connectivity issues in a single Availability Zone in the US-EAST-1 region.  A small number of instances have been affected and the majority of those have recovered. We are working to recover the remaining affected instances.</div><div><span class=\"yellowfg\">10:34 AM PDT</span>&nbsp;Between 7:54 AM and 9:04 AM PDT a small number of RDS instances in the US-EAST-1 Region experienced network connectivity issues in a single Availability Zone.  Network connectivity has been restored and the service is operating normally.</div>",
+      "service": "rds-us-east-1"
+    },
+    {
+      "service_name": "Amazon Redshift (N. Virginia)",
+      "summary": "[RESOLVED] Network Connectivity",
+      "date": "1379087188",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 8:51 AM PDT</span>&nbsp;We are investigating network connectivity issues for Amazon Redshift clusters in a single Availability Zone in the US-EAST-1 region.</div><div><span class=\"yellowfg\">10:28 AM PDT</span>&nbsp;A small number of Redshift instances in the US-EAST-1 Region experienced network connectivity issues.  The issue has been resolved and the service is operating normally.</div>",
+      "service": "redshift-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Network connectivity",
+      "date": "1379342347",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:40 AM PDT</span>&nbsp;We are investigating connectivity issues between two Availability Zones affecting a small number of instances in the US-EAST-1 region.</div><div><span class=\"yellowfg\"> 8:22 AM PDT</span>&nbsp;We have identified the root cause of the connectivity issues between two Availability Zones in the US-EAST-1 region. We have restored connectivity for the majority of affected instances, and are continuing to work on restoring connectivity to the remainder of the affected instances.</div><div><span class=\"yellowfg\"> 9:25 AM PDT</span>&nbsp;We are continuing to work on restoration of network connectivity.  A small number of instances are seeing connectivity issues when communicating between two Availability Zones. Additionally, some customers are experiencing degraded connectivity from their VPN connections. There has been no impact to connectivity between Availability Zones using private IP addresses or to the Internet.</div><div><span class=\"yellowfg\"> 9:49 AM PDT</span>&nbsp;Network connectivity has been restored for the remaining impacted instances and all impacted customer VPN connections. The service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Network Connectivity / Increased API Latencies",
+      "date": "1379365322",
+      "status": "1",
+      "details": "",
+      "description": "<h4>Network Connectivity</h4>\r\n<div><span class=\"yellowfg\"> 7:40 AM PDT</span>&nbsp;We are investigating connectivity issues between two Availability Zones affecting a small number of instances in the US-EAST-1 region.</div><div><span class=\"yellowfg\"> 8:22 AM PDT</span>&nbsp;We have identified the root cause of the connectivity issues between two Availability Zones in the US-EAST-1 region. We have restored connectivity for the majority of affected instances, and are continuing to work on restoring connectivity to the remainder of the affected instances.</div><div><span class=\"yellowfg\"> 9:25 AM PDT</span>&nbsp;We are continuing to work on restoration of network connectivity.  A small number of instances are seeing connectivity issues when communicating between two Availability Zones. Additionally, some customers are experiencing degraded connectivity from their VPN connections. There has been no impact to connectivity between Availability Zones using private IP addresses or to the Internet.</div><div><span class=\"yellowfg\"> 9:49 AM PDT</span>&nbsp;Network connectivity has been restored for the remaining impacted instances and all impacted customer VPN connections. The service is operating normally.</div>\r\n<br>\r\n<h4>Increased API Latencies</h4>\r\n<div><span class=\"yellowfg\"> 2:04 PM PDT</span>&nbsp;We are investigating delays for returning DescribeInstances results for newly launched instances in a VPC in the US-EAST-1 Region. Instances that were previously running are not impacted.</div><div><span class=\"yellowfg\"> 3:03 PM PDT</span>&nbsp;We have identified the root cause of the issue causing delays in returning DescribeInstances results for newly launched instances in VPCs in the US-EAST-1 Region and are working to resolve the issue.  New instances in a VPC are being successfully launched but are not reported by DescribeInstances API calls.  Existing instances are not impacted by this issue.</div><div><span class=\"yellowfg\"> 3:53 PM PDT</span>&nbsp;Between 1:12 PM and 3:21 PM PDT we experienced delays in returning DescribeInstances results for newly launched instances in VPCs in the US-EAST-1 region.  During this time new instances in a VPC successfully launched but were not reported by DescribeInstances API calls.  Also during this time some customers may have experienced increased latencies or error rates when calling the DescribeInstances API, including calls for instances that are not in a VPC.  Existing instances were not impacted by this issue.  The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Load Balancing (N. Virginia)",
+      "summary": "[RESOLVED] Increased provisioning times",
+      "date": "1379365601",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 2:07 PM PDT</span>&nbsp;We are investigating increased provisioning and scaling times for VPC load balancers in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 3:15 PM PDT</span>&nbsp;We have identified the root cause of the issue causing increased provisioning and scaling times for VPC load balancers in the US-EAST-1 Region and are working to resolve the issue.</div><div><span class=\"yellowfg\"> 3:55 PM PDT</span>&nbsp;Between 1:12 PM and 3:21 PM PDT we experienced delays in provisioning and scaling times for VPC load balancers in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elb-us-east-1"
+    },
+    {
+      "service_name": "Amazon Simple Workflow Service (N. Virginia)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "date": "1379514082",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:35 AM PDT</span>&nbsp;SWF experienced increased API error rates and latencies between 6:35 AM and 6:55 AM PDT in the US-EAST-1 Region.  The issue has been resolved and the service is operating normally.</div>",
+      "service": "swf-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Increased API Error Rates and Latencies",
+      "date": "1379521335",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 9:28 AM PDT</span>&nbsp;We are investigating increased error rates and latencies for the EC2 APIs in the US-EAST-1 Region.</div><div><span class=\"yellowfg\">10:19 AM PDT</span>&nbsp;We continue to investigate increased error rates and latencies for RunInstances, DescribeInstances and VPC-related API requests in the US-EAST-1 Region.</div><div><span class=\"yellowfg\">11:00 AM PDT</span>&nbsp;Between 9:00 AM and 10:16 AM PDT, we experienced increased error rates and latencies for RunInstances, DescribeInstances and VPC-related API requests in the US-EAST-1 Region. Existing instances were not impacted by this issue. The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Load Balancing (N. Virginia)",
+      "summary": "[RESOLVED] Increased provisioning times",
+      "date": "1379521971",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 9:43 AM PDT</span>&nbsp;We are investigating increased provisioning and scaling times for VPC load balancers in the US-EAST-1 Region.</div><div><span class=\"yellowfg\">10:22 AM PDT</span>&nbsp;We continue to investigate increased provisioning and scaling times for VPC load balancers in the US-EAST-1 Region.</div><div><span class=\"yellowfg\">11:02 AM PDT</span>&nbsp;Between 9:00 AM and 10:20 AM PDT, we experienced increased provisioning and scaling times for VPC load balancers in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elb-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Load Balancing (Sydney)",
+      "summary": "[RESOLVED] Increased API Error Rates",
+      "date": "1379555870",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:34 PM PDT</span>&nbsp;We are investigating increased API error rates in the AP-SOUTHEAST-2 Region.</div><div><span class=\"yellowfg\"> 8:06 PM PDT</span>&nbsp;We continue to investigate increased API error rates and latencies in the AP-SOUTHEAST-2 Region.</div><div><span class=\"yellowfg\"> 8:39 PM PDT</span>&nbsp;Between 6:46 PM and 8:05 PM PDT, we experienced increased API error rates and latencies in the AP-SOUTHEAST-2 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elb-ap-southeast-2"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Ireland)",
+      "summary": "[RESOLVED]  Increased Launch Latencies and Error Rates",
+      "date": "1379811006",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 5:52 PM PDT</span>&nbsp;We are investigating increased error rates and launch times for new instances in a single Availability Zone in the EU-WEST-1 region.</div><div><span class=\"yellowfg\"> 6:32 PM PDT</span>&nbsp;Between 4:36 PM and 5:58 PM PDT we experienced delayed instance launches in a single Availability Zone in the EU-WEST-1 region. During this period a small number of instance launches failed.  Existing instances were unaffected.  The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-eu-west-1"
+    },
+    {
+      "service_name": "Amazon Route 53",
+      "summary": "[RESOLVED] Slow propagation times",
+      "date": "1379855653",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 6:37 AM PDT</span>&nbsp;We are investigating slow propagation of DNS edits to the Route 53 DNS servers. This does not impact queries to existing DNS records.</div><div><span class=\"yellowfg\"> 6:58 AM PDT</span>&nbsp;Between 5:45 AM PDT to 6:48 AM PDT we experienced slow propagation of DNS edits to the Route 53 DNS servers. The issue has been resolved and the service is now operating normally. Queries to existing DNS records were not impacted during this time.</div>",
+      "service": "route53"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Sao Paulo)",
+      "summary": "[RESOLVED] Instance connectivity",
+      "date": "1379898879",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 6:25 PM PDT</span>&nbsp;We are investigating connectivity issues affecting some instances in a single Availability Zone and increased API error rates for DescribeReservedInstances, DescribeReservedInstancesOfferings and DescribeReservedInstancesListings in the SA-EAST-1 Region.</div><div><span class=\"yellowfg\"> 7:16 PM PDT</span>&nbsp;EC2 API error rates have fully recovered. A small number of instances and EBS volumes are still unavailable. We are currently working to restore impacted instances and volumes.</div><div><span class=\"yellowfg\"> 8:18 PM PDT</span>&nbsp;We continue to work on recovery for a small number of instances and EBS volumes. Launches of new instances are also experiencing longer launch times in the affected Availability Zone.</div><div><span class=\"yellowfg\"> 9:23 PM PDT</span>&nbsp;The majority of instances and volumes have been recovered and are operating normally. We are continuing to work to recover the remaining unavailable instances and volumes.</div><div><span class=\"yellowfg\">10:25 PM PDT</span>&nbsp;Availability has been restored to nearly all impacted instances and volumes. Please feel free to contact us directly if you are still seeing issues with your instance. Launch latencies have returned to normal and the service is operating normally.</div>",
+      "service": "ec2-sa-east-1"
+    },
+    {
+      "service_name": "Amazon Relational Database Service (Sao Paulo)",
+      "summary": "[RESOLVED] RDS Instance Connectivity",
+      "date": "1379899516",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 6:37 PM PDT</span>&nbsp;We are investigating connectivity issues to RDS instances in a single Availability Zone in the SA-EAST-1 region.</div><div><span class=\"yellowfg\"> 7:29 PM PDT</span>&nbsp;We are continuing to investigate connectivity issues to RDS instances in a single Availability Zone in the SA-EAST-1 region. New creates in the affected AZ are experiencing elevated latencies.</div><div><span class=\"yellowfg\"> 8:32 PM PDT</span>&nbsp;We are continuing our efforts to restore connectivity to affected RDS instances in a single Availability Zone in the SA-EAST-1 region. New creates, restores and point-in-time restores from snapshots in the affected Availability Zone are experiencing elevated latencies. We are working on resolving the issue.</div><div><span class=\"yellowfg\"> 9:44 PM PDT</span>&nbsp;We are continuing to make progress in restoring connectivity to affected RDS instances in a single Availability Zone in the SA-EAST-1 region. New creates, restores and point-in-time restores from snapshots in the affected Availability Zone are experiencing elevated latencies. Customers with affected instances should consider performing a point-in-time restore of their instance to a different Availability Zone.</div><div><span class=\"yellowfg\">11:01 PM PDT</span>&nbsp;We have restored connectivity to the majority of the affected RDS instances in a single Availability Zone in the SA-EAST-1 region. We are working to restore connectivity to the remaining affected instances. Customers with affected instances may consider performing a point-in-time restore of their instance to a different Availability Zone. Instructions are available here: http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIT.html</div><div><span class=\"yellowfg\">Sep 23, 12:04 AM PDT</span>&nbsp;Availability has been restored to nearly all impacted Amazon RDS instances. New database instance creates and snapshot restore latencies in the affected Availability Zone have returned to normal and the service is operating normally. Please contact us directly if you are still seeing issues with your instance.</div>",
+      "service": "rds-sa-east-1"
+    },
+    {
+      "service_name": "Amazon ElastiCache (Sao Paulo)",
+      "summary": "[RESOLVED] ElastiCache Instance Connectivity",
+      "date": "1379900246",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:07 PM PDT</span>&nbsp;We are working on restoring connectivity to small number of ElastiCache Nodes that are impacted in a single availability zone in the SA-EAST-1 region.</div><div><span class=\"yellowfg\"> 8:13 PM PDT</span>&nbsp;We continue to work on restoring connectivity to a small number of ElastiCache Nodes that are impacted in a single Availability Zone in the SA-EAST-1 Region. New creates in the affected Availability Zone are experiencing elevated latencies.</div><div><span class=\"yellowfg\"> 8:56 PM PDT</span>&nbsp;We continue to work on restoring connectivity to a small number of ElastiCache Nodes that are impacted in a single Availability Zone in the SA-EAST-1 region. We are also seeing increased latencies in creation and modification of cache clusters in the affected Availability Zone.</div><div><span class=\"yellowfg\">10:01 PM PDT</span>&nbsp;Between 6:23 PM and 9:40 PM PDT we experienced connectivity loss to a small number of ElastiCache nodes in the SA-EAST-1 region. The issue has been resolved and the service is now operating normally.</div>",
+      "service": "elasticache-sa-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Load Balancing (Sao Paulo)",
+      "summary": "[RESOLVED] Connectivity issues",
+      "date": "1379902124",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:13 PM PDT</span>&nbsp;We are investigating connectivity issues for load balancers in a single Availability Zone in the SA-EAST-1 Region.</div><div><span class=\"yellowfg\"> 7:59 PM PDT</span>&nbsp;We are continuing to investigate connectivity issues for load balancers in a single Availability Zone in the SA-EAST-1 Region. We are also seeing increased provisioning and scaling times in the affected Availability Zone.</div><div><span class=\"yellowfg\"> 9:26 PM PDT</span>&nbsp;We have restored connectivity for the majority of load balancers in the affected Availability Zone.  We are continuing to work to restore connectivity to the remaining load balancers.</div><div><span class=\"yellowfg\">10:44 PM PDT</span>&nbsp;We have restored connectivity to all impacted load balancers in the affected Availability Zone. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elb-sa-east-1"
+    },
+    {
+      "service_name": "AWS Elastic Beanstalk (Sao Paulo)",
+      "summary": "[RESOLVED] Increased environment create and update latencies",
+      "date": "1379902390",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:16 PM PDT</span>&nbsp;We are currently experiencing increased creation and update latencies for Elastic Beanstalk environments in the SA-EAST-1 region.</div><div><span class=\"yellowfg\"> 8:21 PM PDT</span>&nbsp;We are continuing to investigate connectivity issues for Elastic Beanstalk environments in a single Availability Zone in the SA-EAST-1 Region. We are also seeing increased latency creating and updating Elastic Beanstalk environments in the affected Availability Zone.</div><div><span class=\"yellowfg\"> 9:39 PM PDT</span>&nbsp;We have restored connectivity for the majority of Elastic Beanstalk environments in the affected Availability Zone. We are continuing to work to restore connectivity to the remaining environments.</div><div><span class=\"yellowfg\">10:48 PM PDT</span>&nbsp;We have restored connectivity to all impacted Elastic Beanstalk environments in the affected Availability Zone. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elasticbeanstalk-sa-east-1"
+    },
+    {
+      "service_name": "Amazon CloudFront",
+      "summary": "[RESOLVED] Errors while editing distributions",
+      "date": "1380020221",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 4:00 AM PDT</span>&nbsp;We are investigating errors when customers edit existing distributions via the AWS Management Console. End-user requests for content from our edge locations are not affected by this issue and are being served normally.</div><div><span class=\"yellowfg\"> 4:33 AM PDT</span>&nbsp;We are continuing to investigate errors when customers edit existing distributions via the AWS Management Console. End-user requests for content from our edge locations are not affected by this issue and are being served normally.</div><div><span class=\"yellowfg\"> 5:31 AM PDT</span>&nbsp;Users are experiencing errors when using the AWS Management Console to update certain fields for existing distributions. The affected fields are Price class, CNAMEs, Cert selection, Default root object, Logging, Cookie Logging, Comment, and Enable/Disable. End-user requests for content from our edge locations are not affected by this issue and are being served normally.</div><div><span class=\"yellowfg\"> 7:05 AM PDT</span>&nbsp;We have identified the root cause of the issue causing users to experience errors when using the AWS Management Console to update certain fields for existing distributions. We continue to work towards resolution. Changes to these fields can be made from the API directly using cfcurl (<a href=\"http://aws.amazon.com/code/1878\">http://aws.amazon.com/code/1878</a>).</div><div><span class=\"yellowfg\"> 7:52 AM PDT</span>&nbsp;From Sept. 23 5:50 PM to Sept. 24 7:45 AM PDT, users experienced errors when using the AWS Management Console to update certain fields for existing distributions. The issue has been resolved and the service is operating normally. Throughout this period, end-user requests for content from our edge locations were served without impact.</div>",
+      "service": "cloudfront"
+    },
+    {
+      "service_name": "Amazon CloudWatch (N. Virginia)",
+      "summary": "[RESOLVED] Delayed metrics in US-EAST-1",
+      "date": "1380061836",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 3:31 PM PDT</span>&nbsp;We are investigating increased delays for CloudWatch metrics in the US-EAST-1 Region. CloudWatch alarms may transition into \"INSUFFICIENT_DATA\" state if set on delayed metrics.</div><div><span class=\"yellowfg\"> 4:07 PM PDT</span>&nbsp;Between 3:05 PM and 3:55 PM PDT in the US-EAST-1 Region, customers experienced increased delays in some metrics. During that time, alarms on delayed metrics may have transitioned into an INSUFFICIENT_DATA state. We have resolved the issue. The CloudWatch service is operating normally.</div>",
+      "service": "cloudwatch-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Ireland)",
+      "summary": "[RESOLVED] DNS Resolution Issues",
+      "date": "1380553566",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 9:28 AM PDT</span>&nbsp;A small number of EC2 instances in a single Availability Zone in the EU-WEST-1 Region received stale IP address information from DNS queries for EC2 public hostnames of instances in the same region.  The issue was limited to IP addresses which were recently remapped. The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-eu-west-1"
+    },
+    {
+      "service_name": "Amazon Elastic Load Balancing (N. Virginia)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "date": "1380582359",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 4:14 PM PDT</span>&nbsp;We are investigating increased error rates and latencies for the ELB APIs in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 4:54 PM PDT</span>&nbsp;Between 3:48 PM and 4:15 PM PDT we experienced increased API error rates and latencies in the US-EAST-1 Region.  The issue has been resolved and the service is operating normally.</div>",
+      "service": "elb-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "date": "1380582852",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 4:16 PM PDT</span>&nbsp;We are investigating increased error rates and latencies for the EC2 APIs in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 4:52 PM PDT</span>&nbsp;Between 3:48 PM and 4:15 PM PDT we experienced increased API error rates and latencies in the US-EAST-1 Region.  The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Oregon)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "date": "1380601366",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 9:53 PM PDT</span>&nbsp;We are investigating delays in describe API requests providing consistent information for the state of VPC resources in the US-WEST-2 Region.</div><div><span class=\"yellowfg\">10:22 PM PDT</span>&nbsp;Between 8:52 PM and 10:08 PM PDT some describe API requests for VPC resources reported inconsistent information in the US-WEST-2 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-us-west-2"
+    },
+    {
+      "service_name": "Amazon Elastic Load Balancing (Oregon)",
+      "summary": "[RESOLVED] Increased provisioning times",
+      "date": "1380603132",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 9:54 PM PDT</span>&nbsp;We are investigating increased provisioning and scaling latencies for load balancers in the US-WEST-2 Region.</div><div><span class=\"yellowfg\">10:20 PM PDT</span>&nbsp;Between 8:52 PM and 10:08 PM PDT we experienced delays in provisioning and scaling times for load balancers in the US-WEST-2 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elb-us-west-2"
+    },
+    {
+      "service_name": "Amazon CloudWatch (N. California)",
+      "summary": "[RESOLVED] Delayed metrics in US-WEST-1 ",
+      "date": "1380760055",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 5:28 PM PDT</span>&nbsp;We are investigating increased delays for CloudWatch metrics in the US-WEST-1 region. CloudWatch alarms may transition into \"INSUFFICIENT_DATA\" state if set on delayed metrics. </div><div><span class=\"yellowfg\"> 6:08 PM PDT</span>&nbsp;Between 5:00 PM and 5:55 PM PDT in the US-WEST-1 region, customers experienced increased delays in some metrics. During that time, alarms on delayed metrics may have transitioned into an INSUFFICIENT_DATA state. We have resolved the issue. Delayed metrics are in the process of backfilling in CloudWatch console graphs and for API retrieval. The CloudWatch service is operating normally.</div><div><span class=\"yellowfg\"> 7:41 PM PDT</span>&nbsp;We are investigating increased delays for CloudWatch metrics in the US-WEST-1 region. CloudWatch alarms may transition into \"INSUFFICIENT_DATA\" state if set on delayed metrics.</div><div><span class=\"yellowfg\"> 8:31 PM PDT</span>&nbsp;We can confirm delays in some CloudWatch metrics in the US-WEST-1 region. We are actively working to resolve the issue.</div><div><span class=\"yellowfg\"> 9:32 PM PDT</span>&nbsp;We can confirm delays in some CloudWatch metrics in the US-WEST-1 region. We have identified the cause of this behavior and are implementing a fix.</div><div><span class=\"yellowfg\">10:23 PM PDT</span>&nbsp;Between 7:10 PM and 10:04 PM PDT in the US-WEST-1 region, customers experienced increased delays in some metrics. During that time, alarms on delayed metrics may have transitioned into an INSUFFICIENT_DATA state. We have resolved the issue. The CloudWatch service is operating normally.</div>",
+      "service": "cloudwatch-us-west-1"
+    },
+    {
+      "service_name": "AWS Elastic Beanstalk (N. Virginia)",
+      "summary": "[RESOLVED] High API Latencies",
+      "date": "1380840270",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 3:49 PM PDT</span>&nbsp;Between 2:55 PM and 3:30 PM PDT in the US-EAST-1 Region, customers experienced high API latencies and issues viewing Elastic Beanstalk application and environment information in the AWS Management Console. The issue is resolved and the service is operating normally.</div>",
+      "service": "elasticbeanstalk-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Increased Launch Error Rates ",
+      "date": "1380846938",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 5:50 PM PDT</span>&nbsp;We are investigating increased error rates for new launches in the US-EAST-1 Region. </div><div><span class=\"yellowfg\"> 6:12 PM PDT</span>&nbsp;We can confirm increased error rates for new launches of instances within a VPC in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 7:06 PM PDT</span>&nbsp;Between 4:40 PM and 6:30 PM PDT we experienced increased error rates for new launches of instances within a VPC in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Virtual Private Cloud (Ireland)",
+      "summary": "[RESOLVED] Network connectivity",
+      "date": "1381418046",
+      "status": "2",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 8:15 AM PDT</span>&nbsp;We are investigating intermittent network loss across VPN tunnels in the EU-WEST-1 Region.</div><div><span class=\"yellowfg\"> 8:40 AM PDT</span>&nbsp;We can confirm that beginning at 7:44 AM PDT, VPN tunnels in the EU-WEST-1 Region began experiencing networking loss. We have restored VPN tunnel connectivity to the majority of tunnels.</div><div><span class=\"yellowfg\"> 8:55 AM PDT</span>&nbsp;Between 7:44 AM and 8:26 AM PDT in the EU-WEST-1 Region, we experienced intermittent network loss across VPN tunnels. Between 7:47 AM and 7:57 AM PDT, some customers experienced network loss across both tunnels of a single VPN connection. This issue has been resolved and the service is operating normally.</div>",
+      "service": "vpc-eu-west-1"
+    }
+  ],
+  "current": []
+}

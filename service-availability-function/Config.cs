@@ -16,10 +16,16 @@ namespace BAMCIS.ServiceAvailability
     /// </summary>
     public class Config
     {
+        #region Public Constants
+
         public static readonly string COMBINED = "Combined";
         public static readonly string TIMEZONE = "TimeZone";
         public static readonly string PERIODIC = "Periodic";
         public static readonly string REGION = "Region";
+
+        #endregion
+
+        #region Private Fields
 
         /// <summary>
         /// The singleton instance of the config
@@ -78,7 +84,9 @@ namespace BAMCIS.ServiceAvailability
         /// <summary>
         /// These services do not have a region specified
         /// </summary>
-        private static readonly List<string> _DEFAULT_GLOBAL_SERVICES = new List<string>() { "management-console", "route53", "route53domainregistration", "fps", "cloudfront", "chime", "awswaf", "marketplace" };
+        private static readonly List<string> _DEFAULT_GLOBAL_SERVICES = new List<string>() { "awswaf", "billingconsole", "chatbot", "chime", "cloudfront", "fps", "globalaccelerator", "health", "iam", "import-export", "interregionvpcpeering", "management-console", "marketplace", "organizations", "route53", "route53domainregistration", "spencer" /*ecr public*/, "supportcenter", "trustedadvisor" };
+        private static readonly List<string> _DEFAULT_SERVICES_WITHOUT_REGION = new List<string>() { "resourcegroups" };
+
 
         #endregion
 
@@ -169,6 +177,10 @@ namespace BAMCIS.ServiceAvailability
 
         #endregion
 
+        #endregion
+
+        #region Public Properties
+
         /// <summary>
         /// The url to the service availability data
         /// </summary>
@@ -195,17 +207,16 @@ namespace BAMCIS.ServiceAvailability
         public List<string> GlobalServices { get; set; }
 
         /// <summary>
+        /// Some services, like resourcegroups, don't have a region indicated
+        /// in their name, but are regional
+        /// </summary>
+        public List<string> ServicesWithoutRegion { get; set; }
+
+        /// <summary>
         /// A map of timezones to GMT offsets
         /// </summary>
         public Dictionary<string, string> TimeZoneMap { get; set; }
-
-        /// <summary>
-        /// Private constructor for the JSON convert to use
-        /// </summary>
-        private Config()
-        {
-        }
-
+        
         /// <summary>
         /// When the singleton is accessed the first time, it reads the config file
         /// and loads it as a new object to the private instance
@@ -243,6 +254,21 @@ namespace BAMCIS.ServiceAvailability
             }
         }
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Private constructor for the JSON convert to use
+        /// </summary>
+        private Config()
+        {
+        }
+
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Evaluates what was read in from the config file and sets
         /// any defaults that are needed
@@ -257,6 +283,11 @@ namespace BAMCIS.ServiceAvailability
             if (_instance.GlobalServices == null || _instance.GlobalServices.Count == 0)
             {
                 _instance.GlobalServices = _DEFAULT_GLOBAL_SERVICES;
+            }
+
+            if (_instance.ServicesWithoutRegion == null || _instance.GlobalServices.Count == 0)
+            {
+                _instance.ServicesWithoutRegion = _DEFAULT_SERVICES_WITHOUT_REGION;
             }
 
             if (String.IsNullOrEmpty(_instance.DefaultTimeZone))
@@ -384,5 +415,7 @@ namespace BAMCIS.ServiceAvailability
                 return new Config();
             }
         }
+
+        #endregion
     }
 }

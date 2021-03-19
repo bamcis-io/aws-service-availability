@@ -10,18 +10,19 @@
 	},
 	"AllowedIPRange" : {
 	  "Description" : "The IP range that is allowed to access the API.",
-	  "Type" : "String",
-	  "Default" : "174.77.2.0/24"
+	  "Type" : "String"
 	},
 	"SharedSecret" : {
 	   "Type" : "String",
-	   "Description" : "A shared secret that will be used to ensure only the Cloudfront distribution can access the S3 website content.",
-	   "Default" : "074c0914-ab7b-4604-895a-369b0731b5d8"
+	   "Description" : "A shared secret that will be used to ensure only the Cloudfront distribution can access the S3 website content."
 	},
-	"OIDCStack" : {
+	"CustomDomainName" : {
 	    "Type" : "String",
-		"Description" : "The name of the stack where the OpenID Connect custom resource provider was created",
-		"Default" : "oidc-idp-provider"	 
+		"Description" : "The alternate domain name to use in the CloudFront distribution"
+	},
+	"DnsValidationDomain" : {
+	  "Type" : "String",
+	  "Description" : "The domain where you will validate ownership for the certificate that is created. For example, if your custom domain name is www.example.com, you'd provide example.com as the value here."
 	}
   },
 
@@ -38,6 +39,14 @@
 		 }
 	   ]
      }
+  },
+
+  "Mappings" : {
+    "Constants" : {
+	  "MetricNames" : {
+	    "ExtractionFailures" : "ExtractBeginEndFailures"
+	  }
+	}
   },
 
   "Resources" : {
@@ -97,6 +106,151 @@
 	  }
 	},
 
+	"DataBucket" : {
+	  "Type" : "AWS::S3::Bucket",
+	  "Properties" : {
+	   "BucketName" : "aws-service-availability-data",
+	    "BucketEncryption" : {
+		  "ServerSideEncryptionConfiguration" : [
+		    {
+		      "ServerSideEncryptionByDefault" : {
+		        "SSEAlgorithm" : "AES256"
+		    }
+		  }
+		 ]
+		}
+	  }
+	},
+	"DataBucketPolicy" : {
+	  "Type" : "AWS::S3::BucketPolicy",
+	  "Properties" : {
+	   "Bucket" : {
+	     "Ref" : "DataBucket"
+	   },
+	    "PolicyDocument" : {
+		  "Version":"2012-10-17",
+		  "Statement":[
+			{
+			  "Sid": "Allow the function to initiate DDB exports and retrieve data.",
+			  "Effect":"Allow",
+			  "Principal": {
+			    "AWS" : {
+				  "Fn::GetAtt" : [ "ServiceAvailabilityLambdaRole", "Arn" ]
+				}
+			  },
+			  "Action": [
+			    "s3:GetObject",
+				"s3:PutObject",
+				"s3:AbortMultipartUpload"
+			  ],
+			  "Resource": [
+				  {
+					"Fn::Sub" : "arn:${AWS::Partition}:s3:::${DataBucket}/*"
+				  }
+			  ]
+			},
+			{
+			    "Sid" : "Prevent object deletion",
+				"Effect" : "Deny",
+				"Principal" : {
+				  "AWS" : {
+				    "Fn::GetAtt" : [ "ServiceAvailabilityLambdaRole", "Arn" ]
+				  }
+				},
+				"Action" : [
+				    "s3:DeleteObject"
+				],
+				"Resource": [
+				  {
+					"Fn::Sub" : "arn:${AWS::Partition}:s3:::${DataBucket}/*"
+				  }
+			    ]
+		    }
+			]
+		}
+	  }
+	},
+
+	"CustomDataBucket" : {
+	  "Type" : "AWS::S3::Bucket",
+	  "Properties" : {
+	   "BucketName" : "aws-service-availability-custom-data",
+	    "BucketEncryption" : {
+		  "ServerSideEncryptionConfiguration" : [
+		    {
+		      "ServerSideEncryptionByDefault" : {
+		        "SSEAlgorithm" : "AES256"
+		    }
+		  }
+		 ]
+		}
+	  },
+	  "DeletionPolicy" : "Retain"
+	},
+	"CustomDataBucketPolicy" : {
+	  "Type" : "AWS::S3::BucketPolicy",
+	  "Properties" : {
+	   "Bucket" : {
+	     "Ref" : "CustomDataBucket"
+	   },
+	    "PolicyDocument" : {
+		  "Version":"2012-10-17",
+		  "Statement":[
+			{
+			  "Sid": "Allow the function to retrieve custom data files",
+			  "Effect":"Allow",
+			  "Principal": {
+			    "AWS" : {
+				  "Fn::GetAtt" : [ "ServiceAvailabilityLambdaRole", "Arn" ]
+				}
+			  },
+			  "Action": [
+			    "s3:GetObject"
+			  ],
+			  "Resource": [
+				  {
+					"Fn::Sub" : "arn:${AWS::Partition}:s3:::${CustomDataBucket}/*"
+				  }
+			  ]
+			},
+			{
+			    "Sid" : "Prevent object deletion",
+				"Effect" : "Deny",
+				"Principal" : {
+				  "AWS" : {
+				    "Fn::GetAtt" : [ "ServiceAvailabilityLambdaRole", "Arn" ]
+				  }
+				},
+				"Action" : [
+				    "s3:DeleteObject"
+				],
+				"Resource": [
+				  {
+					"Fn::Sub" : "arn:${AWS::Partition}:s3:::${CustomDataBucket}/*"
+				  }
+			    ]
+		    }
+			]
+		}
+	  }
+	},
+
+	"SpilloverBucket" : {
+	    "Type" : "AWS::S3::Bucket",
+		"Properties" : {
+		"BucketName" : "aws-service-availability-query-spillover",
+	    "BucketEncryption" : {
+		  "ServerSideEncryptionConfiguration" : [
+		    {
+		      "ServerSideEncryptionByDefault" : {
+		        "SSEAlgorithm" : "AES256"
+		    }
+		  }
+		 ]
+		}
+	  }
+	},
+
 	"SNSTopic" : {
 	 "Condition" : "UseSNS",
 	  "Type" : "AWS::SNS::Topic",
@@ -131,7 +285,10 @@
                 ]
              }
           ]
-        }
+        },
+		 "ManagedPolicyArns" : [
+		  "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+		 ]
 	  }
 	},
 
@@ -239,6 +396,109 @@
 	 },
 	  "Description" : "Allows AWS Lambda to get specific SSM parameters."
 	},
+	"LambdaDynamoDBPolicy" : {
+	 "Type" : "AWS::IAM::ManagedPolicy",
+	 "Properties" : {
+	    "PolicyDocument" : {
+	      "Version" : "2012-10-17",
+          "Statement" : [
+		    {					
+				"Effect" : "Allow",
+				"Action" : [
+					"dynamodb:BatchGetItem",
+					"dynamodb:BatchWriteItem",
+					"dynamodb:ConditionCheckItem",
+					"dynamodb:DescribeContinuousBackups",
+					"dynamodb:DescribeTable",
+					"dynamodb:ExportTableToPointInTime",
+					"dynamodb:GetItem",
+					"dynamodb:PartiQLInsert",
+					"dynamodb:PartiQLSelect",
+					"dynamodb:PartiQLUpdate",
+					"dynamodb:PutItem",
+					"dynamodb:Query",
+					"dynamodb:Scan",
+					"dynamodb:UpdateItem"
+				],
+				"Resource" : [
+				  {
+				    "Fn::GetAtt" : ["ServiceHealthDashboardDataTable", "Arn" ]
+				  }
+				]	
+		    }
+		  ]
+		},                       
+	  "Roles" : [
+		{
+			"Ref" : "ServiceAvailabilityLambdaRole"
+		}	
+	  ]
+	 },
+	  "Description" : "Allows AWS Lambda to get specific SSM parameters."
+	},
+	"LambdaCWMetricPolicy" : {
+	  "Type" : "AWS::IAM::ManagedPolicy",
+	  "Properties" : {
+	    "PolicyDocument" : {
+	      "Version" : "2012-10-17",
+          "Statement" : [
+		    {
+			  "Effect" : "Allow",
+			  "Action" : [
+			    "cloudwatch:PutMetricData"
+			  ],
+			  "Resource" : [
+			    "*"
+		      ]
+		    }
+		  ]
+	    },                       
+	    "Roles" : [
+	      {
+		    "Ref" : "ServiceAvailabilityLambdaRole"
+	      }
+	    ]
+	  },
+	  "Description" : "Allows AWS Lambda to write CloudWatch metrics."
+    },
+	"LambdaS3Policy" : {
+	  "Type" : "AWS::IAM::ManagedPolicy",
+	  "Properties" : {
+	    "PolicyDocument" : {
+	      "Version" : "2012-10-17",
+          "Statement" : [
+		    {
+			  "Effect" : "Allow",
+			  "Action" : [
+			    "s3:GetObject"
+			  ],
+			  "Resource" : [
+			    {
+				  "Fn::Sub" : "arn:${AWS::Partition}:s3:::${CustomDataBucket}/*"
+				}
+		      ]
+		    },
+			{
+			  "Effect" : "Allow",
+			  "Action" : [
+			    "s3:ListBucket"
+			  ],
+			  "Resource" : [
+			    {
+				  "Fn::Sub" : "arn:${AWS::Partition}:s3:::${CustomDataBucket}"
+				}
+		      ]
+		    }
+		  ]
+	    },                       
+	    "Roles" : [
+	      {
+		    "Ref" : "ServiceAvailabilityLambdaRole"
+	      }
+	    ]
+	  },
+	  "Description" : "Allows AWS Lambda to get objects from S3."
+    },
 	
 	"ApiGateway" : {
 	  "Type" : "AWS::Serverless::Api",
@@ -288,7 +548,117 @@
 				},
 				"x-amazon-apigateway-integration": {
 				  "uri": {
-				    "Fn::Sub" : "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Get.Arn}/invocations"
+				    "Fn::Sub" : "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetSHDData.Arn}/invocations"
+				  },
+				  "passthroughBehavior": "when_no_match",
+				  "httpMethod": "POST",
+				  "type": "aws_proxy"
+				}
+			  },
+			  "options": {
+				"consumes": [
+				  "application/json"
+				],
+				"produces": [
+				  "application/json"
+				],
+				"responses": {
+				  "200": {
+					"description": "200 response",
+					"headers": {
+					  "Access-Control-Allow-Origin": {
+						"type": "string"
+					  },
+					  "Access-Control-Allow-Methods": {
+						"type": "string"
+					  },
+					  "Access-Control-Allow-Headers": {
+						"type": "string"
+					  }
+					}
+				  }
+				},
+				"x-amazon-apigateway-integration": {
+				  "responses": {
+					"default": {
+					  "statusCode": 200,
+					  "responseParameters": {
+						"method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+						"method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-Content-Sha256,X-Amz-User-Agent,Accept'",
+						"method.response.header.Access-Control-Allow-Origin": "'*'"
+					  }
+					}
+				  },
+				  "requestTemplates": {
+					"application/json": "{\"statusCode\": 200}"
+				  },
+				  "passthroughBehavior": "when_no_match",
+				  "type": "mock"
+				}
+			  }
+			},
+			"/api/serviceavailability/export" : {
+			  "get" : {
+			    "parameters" : [],
+			    "responses": {},
+				"x-amazon-apigateway-integration": {
+				  "uri": {
+				    "Fn::Sub" : "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ManualExportSHDData.Arn}/invocations"
+				  },
+				  "passthroughBehavior": "when_no_match",
+				  "httpMethod": "POST",
+				  "type": "aws_proxy"
+				}
+			  },
+			  "options": {
+				"consumes": [
+				  "application/json"
+				],
+				"produces": [
+				  "application/json"
+				],
+				"responses": {
+				  "200": {
+					"description": "200 response",
+					"headers": {
+					  "Access-Control-Allow-Origin": {
+						"type": "string"
+					  },
+					  "Access-Control-Allow-Methods": {
+						"type": "string"
+					  },
+					  "Access-Control-Allow-Headers": {
+						"type": "string"
+					  }
+					}
+				  }
+				},
+				"x-amazon-apigateway-integration": {
+				  "responses": {
+					"default": {
+					  "statusCode": 200,
+					  "responseParameters": {
+						"method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+						"method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-Content-Sha256,X-Amz-User-Agent,Accept'",
+						"method.response.header.Access-Control-Allow-Origin": "'*'"
+					  }
+					}
+				  },
+				  "requestTemplates": {
+					"application/json": "{\"statusCode\": 200}"
+				  },
+				  "passthroughBehavior": "when_no_match",
+				  "type": "mock"
+				}
+			  }
+			},
+			"/api/serviceavailability/load" : {
+			  "get" : {
+			    "parameters" : [],
+			    "responses": {},
+				"x-amazon-apigateway-integration": {
+				  "uri": {
+				    "Fn::Sub" : "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ManualLoadSHDData.Arn}/invocations"
 				  },
 				  "passthroughBehavior": "when_no_match",
 				  "httpMethod": "POST",
@@ -342,13 +712,14 @@
 	  }
 	},
 
-    "Get" : {
+    "GetSHDData" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
-	    "FunctionName" : "ServiceAvailability",
-		"Description" : "Retrieves SLA metrics from the AWS Service Health Dashboard.",
-        "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::Get",
+	    "FunctionName" : "GetServiceHealthDashboardData",
+		"Description" : "Retrieves the service health dashboard data from a user request.",
+        "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::GetData",
         "Runtime":  "dotnetcore3.1",
+		"Tracing" : "Active",
         "CodeUri": "",
         "MemorySize": 128,
         "Timeout": 120,
@@ -362,25 +733,178 @@
 				"Properties": {
 					"Path": "/api/serviceavailability",
 					"Method": "GET",
-					 "RestApiId" : {
+					"RestApiId" : {
 					   "Ref" : "ApiGateway"
-					 }
+					}
 				}
 			}
         },
 		"Environment" : {
 		  "Variables" : {
-		    "SNSTopic" : {
-			  "Fn::If" : [
-			    "UseSNS",
-			    {
-				  "Ref" : "SNSTopic"
-				},
-				{
-				  "Ref" : "AWS::NoValue"
+		    "ExtractionFailureMetricName" : {
+			  "Fn::FindInMap" : [ "Constants", "MetricNames", "ExtractionFailures" ]
+			}	
+		  }
+	    }
+	  }
+    },
+
+	"ScheduledLoadSHDData" : {
+      "Type" : "AWS::Serverless::Function",
+      "Properties": {
+	    "FunctionName" : "ScheduledLoadServiceHealthDashboardData",
+		"Description" : "Loads the data from the SHD into DynamoDB",
+        "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ScheduledLoadDataFromSource",
+        "Runtime":  "dotnetcore3.1",
+		"Tracing" : "Active",
+        "CodeUri": "",
+        "MemorySize": 512,
+        "Timeout": 900,
+        "Role": {
+			"Fn::GetAtt" : ["ServiceAvailabilityLambdaRole", "Arn"]
+		},
+        "Policies": null,
+        "Events": {
+			"LoadData": {
+				"Type": "Schedule",
+				"Properties": {
+					"Enabled" : true,
+					"Schedule" : "cron(0 12 * * ? *)",
+					"Description" : "Fires the load data function once a day at noon"
 				}
-			  ]
-		    }	
+			}
+        },
+		"Environment" : {
+		  "Variables" : {
+			"ExtractionFailureMetricName" : {
+			  "Fn::FindInMap" : [ "Constants", "MetricNames", "ExtractionFailures" ]
+			}
+		  }
+	    }
+	  }
+    },
+
+	"ManualLoadSHDData" : {
+      "Type" : "AWS::Serverless::Function",
+      "Properties": {
+	    "FunctionName" : "ManualLoadServiceHealthDashboardData",
+		"Description" : "Loads the data from the SHD into DynamoDB",
+        "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ManualLoadDataFromSource",
+        "Runtime":  "dotnetcore3.1",
+		"Tracing" : "Active",
+        "CodeUri": "",
+        "MemorySize": 512,
+        "Timeout": 900,
+        "Role": {
+			"Fn::GetAtt" : ["ServiceAvailabilityLambdaRole", "Arn"]
+		},
+        "Policies": null,
+        "Events": {
+			"ExportData": {
+				"Type": "Api",
+				"Properties": {
+					"Path": "/api/serviceavailability/load",
+					"Method": "GET",
+					"RestApiId" : {
+					   "Ref" : "ApiGateway"
+					}
+				}
+			}
+        },
+		"Environment" : {
+		  "Variables" : {
+			"ExtractionFailureMetricName" : {
+			  "Fn::FindInMap" : [ "Constants", "MetricNames", "ExtractionFailures" ]
+			}
+		  }
+	    }
+	  }
+    },
+
+	"ScheduledExportSHDData" : {
+      "Type" : "AWS::Serverless::Function",
+      "Properties": {
+	    "FunctionName" : "ScheduledExportServiceHealthDashboardData",
+		"Description" : "Exports the SHD from DynamoDB to S3 on a schedule",
+        "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ScheduledExportDataFromDynamoDB",
+        "Runtime":  "dotnetcore3.1",
+		"Tracing" : "Active",
+        "CodeUri": "",
+        "MemorySize": 512,
+        "Timeout": 900,
+        "Role": {
+			"Fn::GetAtt" : ["ServiceAvailabilityLambdaRole", "Arn"]
+		},
+        "Policies": null,
+        "Events": {
+			"LoadData": {
+				"Type": "Schedule",
+				"Properties": {
+					"Enabled" : true,
+					"Schedule" : "cron(30 12 * * ? *)",
+					"Description" : "Exports the data once a day at 12:30"
+				}
+			}
+        },
+		"Environment" : {
+		  "Variables" : {
+			"ExtractionFailureMetricName" : {
+			  "Fn::FindInMap" : [ "Constants", "MetricNames", "ExtractionFailures" ]
+			},
+			"EXPORT_BUCKET" : {
+			    "Ref" : "DataBucket"
+			},
+			"DYNAMODB_TABLE_ARN" : {
+			   "Fn::GetAtt" : [ "ServiceHealthDashboardDataTable", "Arn" ]
+			}
+
+		  }
+	    }
+	  }
+    },
+
+	"ManualExportSHDData" : {
+      "Type" : "AWS::Serverless::Function",
+      "Properties": {
+	    "FunctionName" : "ManualExportServiceHealthDashboardData",
+		"Description" : "Exports the SHD from DynamoDB to S3 on a schedule",
+        "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ManualExportDataFromDynamoDB",
+        "Runtime":  "dotnetcore3.1",
+		"Tracing" : "Active",
+        "CodeUri": "",
+        "MemorySize": 512,
+        "Timeout": 900,
+        "Role": {
+			"Fn::GetAtt" : ["ServiceAvailabilityLambdaRole", "Arn"]
+		},
+        "Policies": null,
+        "Events": {
+			"ExportData": {
+				"Type": "Api",
+				"Properties": {
+					"Path": "/api/serviceavailability/export",
+					"Method": "GET",
+					"RestApiId" : {
+					   "Ref" : "ApiGateway"
+					}
+				}
+			}
+        },
+		"Environment" : {
+		  "Variables" : {
+			"ExtractionFailureMetricName" : {
+			  "Fn::FindInMap" : [ "Constants", "MetricNames", "ExtractionFailures" ]
+			},
+			"EXPORT_BUCKET" : {
+			    "Ref" : "DataBucket"
+			},
+			"DYNAMODB_TABLE_NAME" : {
+			   "Ref" : "ServiceHealthDashboardDataTable"
+			},
+			"DYNAMODB_TABLE_ARN" : {
+			   "Fn::GetAtt" : [ "ServiceHealthDashboardDataTable", "Arn" ]
+			}
+
 		  }
 	    }
 	  }
@@ -437,6 +961,26 @@
 	  }
 	},
 
+	"Certificate" : {
+	    "Type" : "AWS::CertificateManager::Certificate",
+		"Properties" : {
+		    "DomainName" : {
+			  "Fn::Sub" : "*.${DnsValidationDomain}"
+			},
+			"DomainValidationOptions" : [
+			  {
+			    "DomainName" : {
+			      "Fn::Sub" : "*.${DnsValidationDomain}"
+			    },
+				"ValidationDomain" : {
+				  "Ref" : "DnsValidationDomain"
+				}
+			  }
+			],
+			"ValidationMethod" : "DNS"
+		}
+	},
+
 	"CloudfrontDistribution" : {
 	  "Type" : "AWS::CloudFront::Distribution",
 	  "Properties" : {
@@ -445,9 +989,17 @@
 		    "Fn::GetAtt" : [ "WAFv2WebAcl", "Arn" ]
 		  },	 
 		"ViewerCertificate" : {
-		 "CloudFrontDefaultCertificate" : true,
-		   "MinimumProtocolVersion" : "TLSv1.2_2018"
-		},
+		  "AcmCertificateArn" : {
+		    "Ref" : "Certificate"
+		  },
+		  "MinimumProtocolVersion" : "TLSv1.2_2019",
+		  "SslSupportMethod" : "sni-only"
+		}, 
+		"Aliases" : [
+		  {
+		    "Ref" : "CustomDomainName"
+		  }
+		],
 		"Origins" : [
 		    {
 			  "DomainName" : {
@@ -551,7 +1103,7 @@
 		"Properties" : {
 		    "Name" : "GlobalServicesList",
 			"Type" : "StringList",
-			"Value" : "management-console,route53,fps,cloudfront,route53domainregistration,chime,awswaf,marketplace,iam,support",
+			"Value" : "awswaf,billingconsole,chatbot,chime,cloudfront,fps,globalaccelerator,health,iam,import-export,interregionvpcpeering,management-console,marketplace,organizations,route53,route53domainregistration,spencer,supportcenter,trustedadvisor",
 			"Description" : "A list of services that are considered global and do not have a region"
 		}
 	},
@@ -574,121 +1126,278 @@
 		}
 	},
 
-	"MidwayOpenIDConnectIdp" : {
-		"Type" : "Custom::OpenIDConnectIdp",
+	"ServiceHealthDashboardDataTable" : {
+	    "Type" : "AWS::DynamoDB::Table",
 		"Properties" : {
-			"ServiceToken" : {
-				"Fn::ImportValue" : {
-				   "Fn::Sub" : "${OIDCStack}-oidc-idp"
-				}
+		  "AttributeDefinitions" : [
+		    {
+			  "AttributeName" : "id",
+			  "AttributeType" : "S"
 			},
-			"Url" : "https://midway-auth.amazon.com",
-			"ClientIDList" : [
-				"https://serviceavailability.bamcis.io",
-				"https://sts.amazon.com",
-				"https://cognito.amazon.com"
-			],
-			"ThumbprintList" : [
-				"9e99a48a9960b14926bb7f3b02e22da2b0ab7280"
-			],
-			"Tags" : [
-				{
-					"Key" : "workload",
-					"Value" : "aws-service-availability"
-				}
-			]
-		}
-	},
-
-	"CognitoRole" : {
-      "Type" : "AWS::IAM::Role",
-        "Properties" : {
-	      "AssumeRolePolicyDocument" : {
-            "Version" : "2012-10-17",
-            "Statement" : [
-              {
-                "Effect" : "Allow",
-                "Principal" : {
-                  "Federated": "cognito-identity.amazonaws.com"
-                },
-                "Action"    : [
-                  "sts:AssumeRoleWithWebIdentity",
-				  "sts:TagSession"
-                ],
-				"Condition": {
-                  "ForAnyValue:StringLike": {
-                    "cognito-identity.amazonaws.com:amr": "authenticated"
-                  }
-                }
-             }
-          ]
-        }
-	  }
-	},
-
-	"CognitoIdentityPool" : {
-		"Type" : "AWS::Cognito::IdentityPool",
-		"Properties" : {
-		    "IdentityPoolName" : "MidwayIdentityPool",
-			"OpenIdConnectProviderARNs" : [
-			    {
-					"Fn::GetAtt" : [ "MidwayOpenIDConnectIdp", "Arn" ]
-				}
-			],
-			"AllowUnauthenticatedIdentities" : false
-		}
-	},
-
-	"IdentityPoolRole" : {
-        "Type" : "AWS::Cognito::IdentityPoolRoleAttachment",
-        "Properties" : {
-          "IdentityPoolId" : {
-		      "Ref" : "CognitoIdentityPool"
+			{
+			  "AttributeName" : "date",
+			  "AttributeType" : "S"
+			}
+		  ],
+		  "KeySchema" : [
+		      {
+			    "AttributeName" : "id",
+			    "KeyType" : "HASH"
+			  },
+			  {
+			    "AttributeName" : "date",
+				"KeyType" : "RANGE"
+			  }
+		   ],
+		  "BillingMode" : "PAY_PER_REQUEST",
+		  "PointInTimeRecoverySpecification" : { 
+		    "PointInTimeRecoveryEnabled" : true
 		  },
-          "Roles" : {
-		    "authenticated" : {
-			    "Fn::GetAtt" : [ "CognitoRole", "Arn" ]
+		  "TableName" : "ServiceHealthDashboardData"
+		} 
+	},
+
+	"ExtractBeginEndFailureAlarm" : {
+	    "Type" : "AWS::CloudWatch::Alarm",
+		"Condition" : "UseSNS",
+		"Properties" : {
+		  "AlarmActions" : [
+		    {
+		      "Ref" : "SNSTopic"
+		    }
+		  ],
+		  "AlarmDescription" : "Fires whenever a failure is reported in extracting a begin and end time for a dashboard event.",
+		  "ComparisonOperator" : "GreaterThanOrEqualToThreshold",
+		  "ActionsEnabled" : true,
+		  "EvaluationPeriods" : 1,
+		  "MetricName" : {
+		    "Fn::FindInMap" : [ "Constants", "MetricNames", "ExtractionFailures" ]
+		  },
+		  "Namespace" : "SHD",
+		  "Period" : "10",
+		  "Statistic" : "Sum",
+		  "Threshold" : "1",
+		  "TreatMissingData" : "notBreaching"
+		}
+	},
+
+	"SHDDatabase" : {
+	    "Type" : "AWS::Glue::Database",
+		"Properties" : {
+		  "CatalogId" : {
+		    "Ref" : "AWS::AccountId"
+		  },
+		  "DatabaseInput" : {
+		    "Name" : "shd",
+			"Description" : "Contains tables with information from the SHD",
+            "LocationUri" : "dynamo-db-flag"
+		  }
+		}
+	},
+
+	"SHDTable" : {
+	    "Type" : "AWS::Glue::Table",
+		"Properties" : {
+		  "CatalogId" : {
+		    "Ref" : "AWS::AccountId"
+		  },
+		  "DatabaseName" : {
+		    "Ref" : "SHDDatabase"
+		  },
+		  "TableInput" : {
+		    "Name" : "data",
+			"TableType" : "EXTERNAL_TABLE",
+			"Parameters" : {
+			  "classification" : "dynamodb",
+			  "rangekey" : "date",
+			  "hashkey" : "id",
+			  "typeOfData": "table",
+			  "compressionType": "none",
+			  "sourceTable" : {
+				  "Ref" : "ServiceHealthDashboardDataTable"
+			  },
+			  "datetimeFormatMapping" : "date=yyyy-MM-dd'T'HH:mm:ss.SSS'Z',start=yyyy-MM-dd'T'HH:mm:ss.SSS'Z',end=yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+			  "columnMapping" : "eventduration=eventDuration,monthlyoutagedurations=monthlyOutageDurations",
+			  "defaultTimeZone" : "UTC"
+			},
+			"StorageDescriptor" : {
+			  "Location" : {
+			    "Fn::GetAtt" : [ "ServiceHealthDashboardDataTable", "Arn" ]
+			  },
+			  "Compressed" : false,
+			  "Parameters" : {
+			    "classification" : "dynamodb",
+			    "rangekey" : "date",
+			    "hashkey" : "id",
+			    "typeOfData": "table",
+			    "compressionType": "none",
+				"sourceTable" : {
+				  "Ref" : "ServiceHealthDashboardDataTable"
+				}
+			  },
+			  "Columns" : [
+			    {
+				  "Name" : "date",
+				  "Type" : "timestamp"
+				},
+				{
+				  "Name" : "description",
+				  "Type" : "string"
+				},
+				{
+				  "Name" : "end",
+				  "Type" : "timestamp"
+				},
+				{
+				  "Name" : "eventduration",
+				  "Type" : "bigint"
+				},
+				{
+				  "Name" : "id",
+				  "Type" : "string"
+				},
+				{
+				  "Name" : "monthlyoutagedurations",
+				  "Type" : "string"
+				},
+				{
+				  "Name" : "region",
+				  "Type" : "string"
+				},
+				{
+				  "Name" : "service",
+				  "Type" : "string"
+				},
+				{
+				  "Name" : "region",
+				  "Type" : "string"
+				},
+				{
+				  "Name" : "start",
+				  "Type" : "timestamp"
+				},
+				{
+				  "Name" : "status",
+				  "Type" : "string"
+				},
+				{
+				  "Name" : "summary",
+				  "Type" : "string"
+				},
+				{
+				  "Name" : "timeline",
+				  "Type" : "string"
+				}
+			  ] 
 			}
 		  }
-    }
-}
+		}
+	},
 
+	"SHDAthenaCatalog" : {
+	    "Type" : "AWS::Athena::DataCatalog",
+		"Properties" : {
+		    "Description" : "Data catalog for DDB tables",
+			"Name" : "dynamodb",
+			"Parameters" : {
+			    "function" : {
+				    "Fn::Sub" : "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:dynamodb"
+				}
+			},
+			"Type" : "LAMBDA"
+		}
+	},
+
+	"FindOverlappingEventsQuery" : {
+	  "Type" : "AWS::Athena::NamedQuery",
+	  "Properties" : {
+	    "Name" : "Find Overlapping Events",
+		"QueryString" : {
+		  "Fn::Join" : [
+		    "\n",
+			[
+				"WITH tbl AS(",
+				"SELECT",
+				"    concat(dr1.id, '::', cast(cast(to_unixtime(dr1.date) AS BIGINT) AS VARCHAR)) AS event1Id,",
+				"    concat(dr2.id, '::', cast(cast(to_unixtime(dr2.date) AS BIGINT) AS VARCHAR)) AS event2Id,",
+				"	dr1.region AS event1Region,",
+				"	dr2.region AS event2Region,",
+				"	dr1.service AS event1Service,",
+				"	dr2.service AS event2Service,",
+				"	dr1.status AS event1Status,",
+				"	dr2.status AS event2Status,",
+				"	dr1.start AS event1Start,",
+				"	dr1.\"end\" AS event1End,",
+				"	dr1.date AS event1Date,",
+				"	dr2.start AS event2Start,",
+				"	dr2.\"end\" AS event2End,",
+				"	dr2.date AS event2Date,",
+				"	dr1.description AS event1Description,",
+				"	dr2.description AS event2Description",
+				{
+				    "Fn::Sub" : "FROM \"dynamodb\".\"${SHDDatabase}\".\"${SHDTable}\" AS dr1"
+				},
+				{
+				    "Fn::Sub" : "INNER JOIN \"dynamodb\".\"${SHDDatabase}\".\"${SHDTable}\" AS dr2"
+				},
+				"	ON dr1.start <= dr2.\"end\"",
+				"	AND dr2.start <= dr1.\"end\"",
+				"	AND concat(dr1.id, cast(to_unixtime(dr1.date) AS varchar)) != concat(dr2.id, cast(to_unixtime(dr2.date) as varchar))",
+				"	AND dr1.region != dr2.region",
+				"	AND dr1.region != CASE dr2.region",
+				"		WHEN 'us-east-1' THEN 'us-standard'",
+				"		ELSE ''",
+				"	END",
+				"	AND dr2.region != CASE dr1.region",
+				"		WHEN 'us-east-1' THEN 'us-standard'",
+				"		ELSE ''",
+				"	END",
+				")",
+				"SELECT *",
+				"FROM tbl WHERE event1Id < event2Id OR NOT EXISTS (",
+				"  SELECT 1",
+				"  FROM tbl t2 WHERE",
+				"    t2.event1Id = tbl.event2Id",
+				"    AND",
+				"    t2.event2Id = tbl.event1Id",
+				")"
+			]
+		  ]
+		},
+		"Database" : "shd"
+	  }
+	}
   },
 
   "Outputs" : {
     "APIGatewayUrl" : {
-     "Description" : "The URL to access the new API.",
+     "Description" : "The URL to access the API directly without caching.",
 	 "Value" : {	
 		"Fn::Sub" : "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/api/serviceavailability"   
 	 }
    },
     "ApiCloudfrontUrl" : {
-	  "Description" : "The URL to access the API through Cloudfront.",
+	"Description" : "The URL to access the API through Cloudfront.",
 	  "Value" : {
-	    "Fn::Join" : [
-	      "",
-		  [
-		    "https://",
-			{
-			  "Fn::GetAtt" : ["CloudfrontDistribution", "DomainName"]
-			},
-			"/api/serviceavailability"
-		  ]
-		]
+	    "Fn::Sub" : "https://${CloudfrontDistribution.DomainName}/api/serviceavailability"
 	  }
-    },
+	},
+	"ExportApiCloudfrontUrl" : {
+	"Description" : "The URL to manually initiate a data export to S3 through Cloudfront.",
+	  "Value" : {
+	    "Fn::Sub" : "https://${CloudfrontDistribution.DomainName}/api/serviceavailability/export"
+	  }
+	},
+	"LoadApiCloudfrontUrl" : {
+	"Description" : "The URL to manually initiate loading the data from the source to DynamoDB.",
+	  "Value" : {
+	    "Fn::Sub" : "https://${CloudfrontDistribution.DomainName}/api/serviceavailability/load"
+	  }	    
+	},
 	"WebsiteCloudfrontUrl" : {
 	"Description" : "The URL to access the web front end through Cloudfront.",
 	  "Value" : {
-	    "Fn::Join" : [
-	      "",
-		  [
-		    "https://",
-			{
-			  "Fn::GetAtt" : ["CloudfrontDistribution", "DomainName"]
-			}
-		  ]
-		]
+	    "Fn::Sub" : "https://${CloudfrontDistribution.DomainName}"
 	  }
 	}
   }

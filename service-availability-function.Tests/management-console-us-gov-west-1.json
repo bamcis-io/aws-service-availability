@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "AWS Management Console (US-West)",
+  "summary": "[RESOLVED] Increased Error Rates",
+  "date": "1544570280",
+  "status": 1,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\"> 3:18 PM PST</span>&nbsp;We are investigating increased error rates for the AWS Management Console in the US-GOV-WEST-1 Region.</div><div><span class=\"yellowfg\"> 3:56 PM PST</span>&nbsp;Between 2:11 PM and 3:41 PM PST we experienced increased error rates for the AWS Management Console in the US-GOV-WEST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+  "service": "management-console-us-gov-west-1"
+}

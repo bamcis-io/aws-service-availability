@@ -1,0 +1,26 @@
+﻿version: 0.2
+phases:
+  install:
+    runtime-versions:
+      dotnet: 3.1
+
+  pre_build:
+    commands:
+      - echo Restore started on `date`
+      - cd AWSPriceListReservedInstanceHelper.Tests
+      - dotnet clean
+      - dotnet restore
+      
+  build:
+    commands:
+      - echo Build started on `date`
+      - dotnet build
+
+  post_build:
+    commands:
+      - echo Test stated on `date`
+      - dotnet test
+      - EXIT_CODE=$?
+      - echo Tests resulted in exit code $EXIT_CODE
+      - if [ $EXIT_CODE -eq 0 ]; then aws cloudformation validate-template --template-body file://../service-availability-function/service-availability-function.template; fi
+      - exit $EXIT_CODE

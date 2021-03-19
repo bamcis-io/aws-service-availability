@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace BAMCIS.ServiceAvailability
 {
@@ -6,12 +7,15 @@ namespace BAMCIS.ServiceAvailability
     /// Represents an entry from the data.json file from the
     /// service health dashboard
     /// </summary>
-    public class DataEntry
+    public class DashboardEventRaw
     {
+        #region Public Properties
+
         /// <summary>
         /// The friendly service name
         /// </summary>
-        public string Service_Name { get; set; }
+        [JsonProperty(PropertyName = "service_name")]
+        public string ServiceName { get; set; }
 
         /// <summary>
         /// The summary of the event
@@ -44,6 +48,10 @@ namespace BAMCIS.ServiceAvailability
         /// </summary>
         public string Service { get; set; }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Gets a DateTime object from the Date attribute
         /// </summary>
@@ -64,5 +72,25 @@ namespace BAMCIS.ServiceAvailability
                 return DateTime.MinValue;
             }
         }
+
+        /// <summary>
+        /// Gets the region of the event
+        /// </summary>
+        /// <returns></returns>
+        public string GetRegion()
+        {
+            return ServiceUtilities.GetRegion(this.Service);
+        }
+
+        /// <summary>
+        /// Gets the short name of the service like ec2, kms, s3, etc.
+        /// </summary>
+        /// <returns></returns>
+        public string GetServiceShortName()
+        {
+            return ServiceUtilities.GetServiceName(this.Service);
+        }
+
+        #endregion
     }
 }

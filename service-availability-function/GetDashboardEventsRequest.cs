@@ -9,47 +9,52 @@ namespace BAMCIS.ServiceAvailability
     /// The query string parameters of the GET request translated into
     /// a class to filter the service health data
     /// </summary>
-    public class SLARequest
+    public class GetDashboardEventsRequest
     {
-        private List<RegionEndpoint> _Regions;
-        private long _End;
-        private string _Output;
+        #region Private Fields
+
+        private List<RegionEndpoint> _regions;
+        private long _end;
+        private string _output;
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
         /// A comma delimited list of services to query on
         /// </summary>
-        public string Services { get; set; }
+        public IEnumerable<string> Services { get; set; }
 
         /// <summary>
         /// A comma delimited list of regions to query on
         /// </summary>
-        public string Regions
+        public IEnumerable<string> Regions
         {
             get
             {
-                if (this._Regions != null)
+                if (this._regions != null)
                 {
-                    return String.Join(",", this._Regions.Select(x => x.SystemName));
+                    return this._regions.Select(x => x.SystemName);
                 }
                 else
                 {
-                    return String.Empty;
+                    return Enumerable.Empty<string>();
                 }
             }
             set
             {
-                IEnumerable<string> Parts = value.Split(',').Where(x => !String.IsNullOrEmpty(x));
-                this._Regions = new List<RegionEndpoint>();
+                this._regions = new List<RegionEndpoint>();
 
-                foreach (string Part in Parts)
+                foreach (string part in value)
                 {
-                    if (RegionEndpoint.EnumerableAllRegions.Select(x => x.SystemName.ToLower()).Contains(Part.ToLower()))
+                    if (RegionEndpoint.EnumerableAllRegions.Select(x => x.SystemName.ToLower()).Contains(part.ToLower()))
                     {
-                        this._Regions.Add(RegionEndpoint.GetBySystemName(Part));
+                        this._regions.Add(RegionEndpoint.GetBySystemName(part));
                     }
                     else
                     {
-                        throw new ArgumentException($"Did not recognize the region {Part}.");
+                        throw new ArgumentException($"Did not recognize the region {part}.");
                     }
                 }
             }
@@ -67,7 +72,7 @@ namespace BAMCIS.ServiceAvailability
         {
             get
             {
-                return this._End;
+                return this._end;
             }
             set
             {
@@ -75,7 +80,7 @@ namespace BAMCIS.ServiceAvailability
                 {
                     if (value >= this.Start)
                     {
-                        this._End = value;
+                        this._end = value;
                     }
                     else
                     {
@@ -84,7 +89,7 @@ namespace BAMCIS.ServiceAvailability
                 }
                 else
                 {
-                    this._End = value;
+                    this._end = value;
                 }
             }
         }
@@ -96,7 +101,7 @@ namespace BAMCIS.ServiceAvailability
         {
             get
             {
-                return this._Output;
+                return this._output;
             }
             set
             {
@@ -106,34 +111,38 @@ namespace BAMCIS.ServiceAvailability
                     {
                         case "csv":
                             {
-                                this._Output = "csv";
+                                this._output = "csv";
                                 break;
                             }
                         default:
                         case "json":
                             {
-                                this._Output = "json";
+                                this._output = "json";
                                 break;
                             }
                     }
                 }
                 else
                 {
-                    this._Output = String.Empty;
+                    this._output = String.Empty;
                 }
             }
         }
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Default constructor for the request
         /// </summary>
-        public SLARequest()
+        public GetDashboardEventsRequest()
         {
-            this.Services = String.Empty;
-            this.Regions = String.Empty;
+            this.Services = Enumerable.Empty<string>();
+            this.Regions = Enumerable.Empty<string>();
             this.Start = 0;
             this.End = 0;
-            this._Regions = new List<RegionEndpoint>();
+            this._regions = new List<RegionEndpoint>();
         }
 
         /// <summary>
@@ -141,27 +150,27 @@ namespace BAMCIS.ServiceAvailability
         /// query string parameters
         /// </summary>
         /// <param name="request">The query string parameters</param>
-        public SLARequest(IDictionary<string, string> request) : this()
+        public GetDashboardEventsRequest(IDictionary<string, string> request) : this()
         {
             if (request != null)
             {
-                foreach (string Key in request.Keys)
+                foreach (string key in request.Keys)
                 {
-                    switch (Key.ToLower())
+                    switch (key.ToLower())
                     {
                         case "services":
                             {
-                                this.Services = request[Key];
+                                this.Services = request[key].Split(',');
                                 break;
                             }
                         case "regions":
                             {
-                                this.Regions = request[Key];
+                                this.Regions = request[key].Split(',');
                                 break;
                             }
                         case "start":
                             {
-                                if (Int64.TryParse(request[Key], out long temp))
+                                if (Int64.TryParse(request[key], out long temp))
                                 {
                                     this.Start = temp;
                                 }
@@ -170,7 +179,7 @@ namespace BAMCIS.ServiceAvailability
                             }
                         case "end":
                             {
-                                if (Int64.TryParse(request[Key], out long temp))
+                                if (Int64.TryParse(request[key], out long temp))
                                 {
                                     this.End = temp;
                                 }
@@ -179,7 +188,7 @@ namespace BAMCIS.ServiceAvailability
                             }
                         case "output":
                             {
-                                this.Output = request[Key];
+                                this.Output = request[key];
                                 break;
                             }
                     }
@@ -187,13 +196,17 @@ namespace BAMCIS.ServiceAvailability
             }
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Gets the specified region endpoints in the request
         /// </summary>
         /// <returns></returns>
         public List<RegionEndpoint> GetRegionEndpoints()
         {
-            return this._Regions;
+            return this._regions;
         }
 
         /// <summary>
@@ -203,7 +216,9 @@ namespace BAMCIS.ServiceAvailability
         /// <returns>A list of regions in the us-east-1 type format</returns>
         public List<string> GetRegions()
         {
-            return this._Regions.Select(x => x.SystemName.ToLower()).ToList();
+            return this._regions.Select(x => x.SystemName.ToLower()).ToList();
         }
+
+        #endregion
     }
 }

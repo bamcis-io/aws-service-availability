@@ -1,0 +1,9 @@
+{
+  "service_name": "Amazon Virtual Private Cloud (Sydney)",
+  "summary": "[RESOLVED] VPN Connectivity",
+  "date": "1465127842",
+  "status": 1,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\"> 5:03 AM PDT</span>&nbsp;Between June 4th at 10:25 PM PDT and June 5th at 12:45 AM PDT some VPN connections experienced connectivity issues in the AP-SOUTHEAST-2 Region. During this period there were elevated levels of packet loss from customer's VPC to their CGW. The issue has been resolved and the service is operating normally.</div>",
+  "service": "vpc-ap-southeast-2"
+}

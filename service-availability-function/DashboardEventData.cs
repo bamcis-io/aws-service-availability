@@ -5,16 +5,16 @@ namespace BAMCIS.ServiceAvailability
     /// <summary>
     /// The data.json contents from the service health dashboard
     /// </summary>
-    public class SlaData
+    public class DashboardEventData
     {
         /// <summary>
         /// Previously occured events
         /// </summary>
-        public List<DataEntry> Archive { get; set; }
+        public IEnumerable<DashboardEventRaw> Archive { get; set; }
 
         /// <summary>
         /// Current events affecting services
         /// </summary>
-        public List<DataEntry> Current { get; set; }
+        public IEnumerable<DashboardEventRaw> Current { get; set; }
     }
 }

@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "Amazon Simple Storage Service (N. Virginia)",
+  "summary": "[RESOLVED] Elevated error rates",
+  "date": "1526466746",
+  "status": 1,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\"> 3:32 AM PDT</span>&nbsp;Between 2:35 AM and 2:39 AM PDT, we experienced elevated error rates for requests in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+  "service": "s3-us-standard"
+}

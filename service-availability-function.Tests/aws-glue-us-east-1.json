@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "AWS Glue Data Brew (N. Virginia)",
+  "summary": "[RESOLVED] Increased Error Rates",
+  "date": "1543880790",
+  "status": 1,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\"> 3:46 PM PST</span>&nbsp;We are investigating increased error rates for file system creation requests in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 4:13 PM PST</span>&nbsp;We are continuing to experience increased error rates for file system creation requests in the US-EAST-1 Region, and are actively working to resolve the issue.</div><div><span class=\"yellowfg\"> 5:02 PM PST</span>&nbsp;Between 2:40 PM and 4:45 PM PST, we experienced increased error rates for file system creation requests in the US-EAST-1 Region. The issue has been resolved and the service is now operating normally.</div>",
+  "service": "aws-glue-us-east-1"
+}

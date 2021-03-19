@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "AWS Internet Connectivity (Oregon)",
+  "summary": "[RESOLVED] Network Connectivity",
+  "date": "1473841867",
+  "status": 1,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\"> 1:31 AM PDT</span>&nbsp;Between September 13 11:55 PM and September 14 1:03 AM we experienced an Internet connectivity issue with an external provider outside of our network which affected traffic from some customers in the US-WEST-2 Region. Connectivity to instances and services within the Region was not impacted by the event. The issue has been resolved and connectivity has been restored.</div>",
+  "service": "internetconnectivity-us-west-2"
+}
