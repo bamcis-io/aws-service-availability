@@ -7,7 +7,7 @@ phases:
   pre_build:
     commands:
       - echo Restore started on `date`
-      - cd AWSPriceListReservedInstanceHelper.Tests
+      - cd service-availability-function.Tests
       - dotnet clean
       - dotnet restore
       
