@@ -14,7 +14,7 @@ namespace BAMCIS.ServiceAvailability.Tests
     public class FunctionTest
     {
         [Fact]
-        public async Task TestScheduledLoadFromSHD()
+        public async Task Live_TestScheduledLoadFromSHD()
         {
             // ARRANGE
             Entrypoint ep = new Entrypoint();
@@ -33,7 +33,7 @@ namespace BAMCIS.ServiceAvailability.Tests
         }
 
         [Fact]
-        public async Task TestManualLoadFromSHD()
+        public async Task Live_TestManualLoadFromSHD()
         {
             // ARRANGE
             Entrypoint ep = new Entrypoint();
@@ -52,7 +52,7 @@ namespace BAMCIS.ServiceAvailability.Tests
         }
 
         [Fact]
-        public async Task TestGetDataAsync()
+        public async Task Live_TestGetDataAsync()
         {
             // ARRANGE
             Entrypoint ep = new Entrypoint();
@@ -74,7 +74,7 @@ namespace BAMCIS.ServiceAvailability.Tests
         }
 
         [Fact]
-        public async Task TestGetDataWithFilterAsync()
+        public async Task Live_TestGetDataWithFilterAsync()
         {
             // ARRANGE
             Entrypoint ep = new Entrypoint();
