@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "AWS Management Console",
+  "summary": "[RESOLVED] Increased Error Rates",
+  "date": "1471369153",
+  "status": "1",
+  "details": "",
+  "description": "<span class=\"yellowfg\">10:41 AM PDT</span>&nbsp;Between 10:18 AM and 10:28 AM PDT we experienced increased error rates and latencies for the AWS Management Console in the US-WEST-2 Region. The issue has been resolved and the service is operating normally.",
+  "service": "management-console"
+}

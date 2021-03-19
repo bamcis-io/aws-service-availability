@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "AWS CodeBuild (N. Virginia)",
+  "summary": "[RESOLVED] Increased Error Rates",
+  "date": "1488311195",
+  "status": 2,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\">11:47 AM PST</span>&nbsp;We can confirm increased error rates in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 3:41 PM PST</span>&nbsp;We are seeing recovery in error rates while executing builds in the US-EAST-1 Region. We will continue to monitor build error rates until fully recovered. </div><div><span class=\"yellowfg\"> 4:01 PM PST</span>&nbsp;Between 9:37 AM and 3:48 PST, we experienced elevated error rates for APIs and builds in the US-EAST-1 Region. The errors have recovered and the service is now operating normally.</div>",
+  "service": "codebuild-us-east-1"
+}

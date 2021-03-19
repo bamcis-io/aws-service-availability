@@ -1,0 +1,402 @@
+﻿{
+  "archive": [
+    {
+      "service_name": "Amazon Virtual Private Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Increased packet loss",
+      "status": 1,
+      "date": 1326153234,
+      "service": "VirtualPrivateCloud",
+      "description": "<div><span class=\"yellowfg\"> 3:56 PM PST</span>&nbsp;We are investigating increased packet loss impacting VPN connections in the US-EAST-1 region.</div><div><span class=\"yellowfg\"> 5:20 PM PST</span>&nbsp;Between 2:15 PM - 4:09 PM PST, some customers experienced elevated packet loss via VPN and Direct Connect to some VPC instances in the Northern Virginia (US-EAST-1) region. The service is now operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Route 53",
+      "summary": "[RESOLVED] Slow Propagation Times",
+      "status": 1,
+      "date": 1326175731,
+      "service": "Route53",
+      "description": "<div><span class=\"yellowfg\">10:10 PM PST</span>&nbsp;We experienced slow propagation of DNS edits to the Route 53 DNS servers from 8:58 PM PST to 9:59 PM PST. The problem is now resolved.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon CloudFront",
+      "summary": "[RESOLVED] Invalidation API error rates",
+      "status": 1,
+      "date": 1326288147,
+      "service": "CloudFront",
+      "description": "<div><span class=\"yellowfg\"> 5:44 AM PST</span>&nbsp;We are investigating elevated Invalidation API error rates, requests for content are being served normally.</div><div><span class=\"yellowfg\"> 7:13 AM PST</span>&nbsp;We experienced increased Invalidation API error rates from 1:19 AM PST until 6:05 AM PST. All API requests are back to normal. Requests for content were served normally throughout.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Storage Service (Ireland)",
+      "summary": "[RESOLVED] Increased Errors ",
+      "status": 1,
+      "date": 1326480641,
+      "service": "S3EU",
+      "description": "<div><span class=\"yellowfg\">10:51 AM PST</span>&nbsp;We are currently investigating increased errors for requests to our EU-WEST-1 region.</div><div><span class=\"yellowfg\">10:54 AM PST</span>&nbsp;Requests to S3 in the EU-WEST-1 region between 10:37AM PST to 10:41AM PST experienced higher than normal error rates.  The issue is now resolved and the service is operating normally.</div><div><span class=\"yellowfg\">11:34 AM PST</span>&nbsp;Requests to S3 in the EU-WEST-1 region between 10:37AM PST to 10:41AM PST and 11:18AM PST to 11:22AM PST experienced higher than normal error rates.  The issue is now resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Storage Service (Tokyo)",
+      "summary": "[RESOLVED] Connectivity Issues",
+      "status": 1,
+      "date": 1326928819,
+      "service": "s3-ap-northeast-1",
+      "description": "<div><span class=\"yellowfg\"> 3:28 PM PST</span>&nbsp;From 2:48PM PST to 2:58PM PST a subset of requests to our AP-Northeast-1 region experienced timeouts when trying to connect.  The issue has been resolved.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Tokyo)",
+      "summary": "[RESOLVED] Connectivity Issues",
+      "status": 1,
+      "date": 1326941340,
+      "service": "ec2-ap-northeast-1",
+      "description": "<div><span class=\"yellowfg\"> 6:51 PM PST</span>&nbsp;From 2:48PM PST to 2:58PM PST some EC2 instances in our AP-Northeast-1 region experienced problems with network connections to/from clients on the Internet.  The issue has been resolved.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Storage Service (N. California)",
+      "summary": "[RESOLVED] Increased Errors",
+      "status": 3,
+      "date": 1326971393,
+      "service": "S3NoCal",
+      "description": "<div><span class=\"yellowfg\"> 3:11 AM PST</span>&nbsp;We are investigating increased errors for requests in the US-West-1 region.</div><div><span class=\"yellowfg\"> 3:29 AM PST</span>&nbsp;From 2:56AM PST to 3:16AM PST requests to the US-WEST-1 region experienced high failure rates.  The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. California)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "status": 3,
+      "date": 1326972046,
+      "service": "EC2NoCal",
+      "description": "<div><span class=\"yellowfg\"> 3:26 AM PST</span>&nbsp;We are investigating elevated API errors rates in the US-WEST-1 region.</div><div><span class=\"yellowfg\"> 3:39 AM PST</span>&nbsp;Between 2:57 AM and 3:20 AM PST, EC2 API requests were failing in the US-WEST-1 region. The issue has been corrected and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon CloudWatch (N. California)",
+      "summary": "[RESOLVED] Increased error rates and latencies",
+      "status": 1,
+      "date": 1326973209,
+      "service": "CloudWatchNoCal",
+      "description": "<div><span class=\"yellowfg\"> 3:41 AM PST</span>&nbsp;We are investigating increased error rates and latencies for CloudWatch APIs and metrics in the US-WEST-1 Region. CloudWatch Alarms may be transitioning into \"INSUFFICIENT DATA\" state if set on delayed metrics.</div><div><span class=\"yellowfg\"> 3:54 AM PST</span>&nbsp;Between 2:57 AM and 3:20 AM PST, CloudWatch metrics were delayed and CloudWatch APIs requests were failing in the US-WEST-1 region. During this time, CloudWatch data set on delayed metrics transitioned into the INSUFFICIENT_DATA state. The issue has been corrected. Metric data points delayed during this event can now be seen in CloudWatch graphs. CloudWatch alarms and data services are operating normally. </div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Relational Database Service (N. California)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "status": 1,
+      "date": 1326973316,
+      "service": "RelationalDBServiceNoCal",
+      "description": "<div><span class=\"yellowfg\"> 3:45 AM PST</span>&nbsp;Between 2:57 AM and 3:20 AM PST, RDS API requests were experiencing high API error rates in the US-WEST-1 region. The issue has been corrected and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Queue Service (N. California)",
+      "summary": "[RESOLVED] Increased error rates and latencies",
+      "status": 3,
+      "date": 1326974098,
+      "service": "SQSNoCal",
+      "description": "<div><span class=\"yellowfg\"> 4:03 AM PST</span>&nbsp;Between 2:57 AM and 3:20 AM PST, API requests were experiencing high error rates in the US-WEST-1 region. The issue has been corrected and the service is operating normally</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Notification Service (N. California)",
+      "summary": "[RESOLVED] Increased error rates and latencies",
+      "status": 3,
+      "date": 1326974672,
+      "service": "SNSUSWest",
+      "description": "<div><span class=\"yellowfg\"> 4:06 AM PST</span>&nbsp;Between 2:57 AM and 3:20 AM PST, API requests were experiencing high error rates in the US-WEST-1 region. The issue has been corrected and the service is operating normally</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon SimpleDB (N. California)",
+      "summary": "[RESOLVED] Increased error rates and latencies",
+      "status": 3,
+      "date": 1326974823,
+      "service": "SimpleDBNoCal",
+      "description": "<div><span class=\"yellowfg\"> 4:09 AM PST</span>&nbsp;Between 2:57AM to 3:20 AM PST, there were increased error rates and latencies for customers connecting to Amazon SimpleDBs US-West-1 region. The service is operating normally now.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic MapReduce (N. California)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "status": 3,
+      "date": 1326976069,
+      "service": "ElasticMapReduceUSWest",
+      "description": "<div><span class=\"yellowfg\"> 4:15 AM PST</span>&nbsp;Between 2:57 AM and 3:20 AM PST, ElasticMapReduce API requests were failing in the US-WEST-1 region. The issue has been corrected and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon ElastiCache (N. California)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "status": 1,
+      "date": 1326976400,
+      "service": "elasticache-us-west-1",
+      "description": "<div><span class=\"yellowfg\"> 4:13 AM PST</span>&nbsp;Between 2:57 AM and 3:20 AM PST, ElastiCache API requests were experiencing high API error rates in the US-WEST-1 region. The issue has been corrected and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "AWS CloudFormation (N. California)",
+      "summary": "[RESOLVED] Increased error rates and latencies",
+      "status": 1,
+      "date": 1326976604,
+      "service": "CloudFormationNoCal",
+      "description": "<div><span class=\"yellowfg\"> 4:41 AM PST</span>&nbsp;Between 2:57 AM and 3:20 AM PST, API requests were experiencing high error rates in the US-WEST-1 region. The issue has been corrected and the service is operating normally</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Sao Paulo)",
+      "summary": "[RESOLVED] Connectivity Issues",
+      "status": 1,
+      "date": 1327004579,
+      "service": "ec2-sa-east-1",
+      "description": "<div><span class=\"yellowfg\">12:25 PM PST</span>&nbsp;From 11:39AM PST to 12:04PM PST some EC2 instances in our SA-East-1 region experienced problems with network connections to/from clients on the Internet. One of our redundant upstream Internet carriers was seeing elevated packet loss for some clients. We have shifted traffic away from this carrier for now and the issue has been resolved.\r\n</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Storage Service (N. California)",
+      "summary": "[RESOLVED] Increased error rates in Amazon S3",
+      "status": 1,
+      "date": 1327058344,
+      "service": "S3NoCal",
+      "description": "<div><span class=\"yellowfg\"> 3:26 AM PST</span>&nbsp;We are investigating increased error rates for Amazon S3 in the us-west-1 region.</div><div><span class=\"yellowfg\"> 3:59 AM PST</span>&nbsp;After investigation we determined that there were not increased errors.  This was a false alarm.  The service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[Resolved] Increased API Latencies",
+      "status": 2,
+      "date": 1327087770,
+      "service": "EC2",
+      "description": "<div><span class=\"yellowfg\">11:43 AM PST</span>&nbsp;We are investigating increased latencies for the EBS APIs and elevated launch failures for EBS backed instances in the US-EAST-1 Region.</div><div><span class=\"yellowfg\">12:30 PM PST</span>&nbsp;Between 11:09 AM and 12:04 PM PST EBS APIs experienced elevated latencies in the US-EAST-1 region and there were also elevated launch failures for EBS backed instances. For a portion of that time, a small number of existing EBS volumes briefly experienced increased IO latencies. The service is now operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "AWS CloudFormation (N. Virginia)",
+      "summary": "[RESOLVED] Failures creating some AWS CloudFormation stacks in the US-EAST-1 region",
+      "status": 1,
+      "date": 1327088611,
+      "service": "CloudFormation",
+      "description": "<div><span class=\"yellowfg\">12:11 PM PST</span>&nbsp;We are investigating failures creating some AWS CloudFormation stacks in the US-EAST-1 region.</div><div><span class=\"yellowfg\">12:33 PM PST</span>&nbsp;Between 11:09am and 12:04pm PST we experienced failures creating some AWS CloudFormation stacks in the US-EAST-1 region. The issue is now resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "AWS Elastic Beanstalk",
+      "summary": "[RESOLVED] Failures launching new environments in the US-EAST-1 region",
+      "status": 1,
+      "date": 1327090273,
+      "service": "ElasticBeanstalk",
+      "description": "<div><span class=\"yellowfg\">12:12 PM PST</span>&nbsp;We are investigating delays in new environment creation while launching new EC2 instances in the US-EAST-1 region. </div><div><span class=\"yellowfg\">12:34 PM PST</span>&nbsp;Between 11:09am and 12:04pm PST we experienced delays in new environment creation in the US-EAST-1 region. The issue is now resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Storage Service (US Standard)",
+      "summary": "[RESOLVED] DNS Resolution issues",
+      "status": 1,
+      "date": 1327319500,
+      "service": "S3US",
+      "description": "<div><span class=\"yellowfg\"> 4:07 AM PST</span>&nbsp;DNS resolution is impacted for bucket names with virtual hosts  (i.e., <bucketname>.s3.amazonaws.com) in the US Standard region. Requests for buckets with virtual names that have already been resolved are being served.</div><div><span class=\"yellowfg\"> 4:40 AM PST</span>&nbsp;Between 2:55AM PST and 4:15AM PST DNS resolution for requests to Amazon S3 buckets in the US-Standard region addressed using bucketname.s3.amazonaws.com failed. Requests addressed using s3.amazonaws.com/bucketname succeeded.  The issue has been corrected and DNS resolution is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon CloudFront",
+      "summary": "[RESOLVED] Elevated Error Rate in Sao Paulo",
+      "status": 1,
+      "date": 1327352055,
+      "service": "CloudFront",
+      "description": "<div><span class=\"yellowfg\"> 1:03 PM PST</span>&nbsp;From 11:05 PST to 11:55 PST the Sao Paulo (GRU1) edge location experienced elevated error rates affecting some object requests.  The Service is now operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Storage Service (N. California)",
+      "summary": "[RESOLVED] Increased errors",
+      "status": 1,
+      "date": 1327677583,
+      "service": "S3NoCal",
+      "description": "<div><span class=\"yellowfg\"> 7:21 AM PST</span>&nbsp;We are investigating increased errors for requests to our US-West-1 region. \r\n\r\n</div><div><span class=\"yellowfg\"> 7:39 AM PST</span>&nbsp;From 7:01AM PST to 7:18AM PST requests to the US-WEST-1 region experienced increased error rates. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. California)",
+      "summary": "[RESOLVED] Increased API error rates and latencies.",
+      "status": 1,
+      "date": 1327677710,
+      "service": "EC2NoCal",
+      "description": "<div><span class=\"yellowfg\"> 7:22 AM PST</span>&nbsp;We are currently investigating increased error rates and latencies for the EC2 APIs in the US-WEST-1 Region.</div><div><span class=\"yellowfg\"> 7:31 AM PST</span>&nbsp;Between 7:01 AM and 7:18 AM PST, EC2 API requests were failing in the US-WEST-1 region. The issue has been corrected and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Relational Database Service (N. California)",
+      "summary": "[RESOLVED] Increased API Error Rates",
+      "status": 1,
+      "date": 1327677778,
+      "service": "RelationalDBServiceNoCal",
+      "description": "<div><span class=\"yellowfg\"> 7:26 AM PST</span>&nbsp;We are investigating increased API error rates in the us-west-1 region.</div><div><span class=\"yellowfg\"> 7:55 AM PST</span>&nbsp;Between 7:01 AM and 7:18 AM PST, some RDS API requests were failing in the US-WEST-1 region. The issue has been corrected and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Notification Service (N. California)",
+      "summary": "[RESOLVED] Elevated errors",
+      "status": 1,
+      "date": 1327677988,
+      "service": "SNSUSWest",
+      "description": "<div><span class=\"yellowfg\"> 7:27 AM PST</span>&nbsp;We are investigating elevated errors.</div><div><span class=\"yellowfg\"> 7:40 AM PST</span>&nbsp;From 7:01AM PST to 7:18AM PST requests to the US-WEST-1 region experienced increased error rates. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Queue Service (N. California)",
+      "summary": "[RESOLVED] Elevated errors",
+      "status": 1,
+      "date": 1327678057,
+      "service": "SQSNoCal",
+      "description": "<div><span class=\"yellowfg\"> 7:29 AM PST</span>&nbsp;We are investigating elevated error rates for API calls in the US-WEST-1 region. </div><div><span class=\"yellowfg\"> 7:40 AM PST</span>&nbsp;From 7:01AM PST to 7:18AM PST requests to the US-WEST-1 region experienced increased error rates. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon CloudWatch (N. California)",
+      "summary": "[RESOLVED] Increased API error rates and latencies.",
+      "status": 1,
+      "date": 1327679913,
+      "service": "CloudWatchNoCal",
+      "description": "<div><span class=\"yellowfg\"> 7:59 AM PST</span>&nbsp;Between 7:01 AM and 7:18 AM PST, CloudWatch API availability requests were failing in the US-WEST-1 region. Some metrics were delayed during this event. The issue has been corrected and the service is operating normally. </div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Delays in VPC EIP Associations",
+      "status": 1,
+      "date": 1327936626,
+      "service": "EC2",
+      "description": "<div><span class=\"yellowfg\"> 7:20 AM PST</span>&nbsp;We are currently investigating delays in the associations of VPC Elastic IPs in a single availability zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 7:36 AM PST</span>&nbsp;Between 5:15 AM and 7:16 AM PST a single availability zone in the US-EAST-1 Region experienced delays in VPC Elastic IP associations. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Virtual Private Cloud (Tokyo)",
+      "summary": "[RESOLVED] Increased errors",
+      "status": 1,
+      "date": 1328325698,
+      "service": "vpc-ap-northeast-1",
+      "description": "<div><span class=\"yellowfg\"> 7:34 PM PST</span>&nbsp;We are investigating elevated error rates for VPN tunnels on one of our redundant VPN Gateway endpoints in the NRT region.</div><div><span class=\"yellowfg\"> 8:24 PM PST</span>&nbsp;A small number of customers are experiencing elevated packet loss on one of two IPSec VPN tunnels in the AP-NORTHEAST-1 region. The second tunnels are operating normally.</div><div><span class=\"yellowfg\"></div><div><span class=\"yellowfg\">Feb  4,  3:39 AM PST</span>&nbsp;Between 7:17PM PST and 3:03AM PST, a small number of customers experienced elevated packet loss through an IPSec VPN tunnel in the AP-NORTHEAST-1 region. The packet loss has been fixed and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Increased EC2 API error rates",
+      "status": 1,
+      "date": 1328615153,
+      "service": "EC2",
+      "description": "<div><span class=\"yellowfg\"> 4:10 AM PST</span>&nbsp;We are currently investigating increased error rates and latencies for Spot instance related APIs, as well as failures in the fulfillment of new Spot instance requests, in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 5:53 AM PST</span>&nbsp;Between 1:40 PM and 05:15 AM PST the fulfillment of Spot instance requests experienced increased failure rates in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon SimpleDB (Sao Paulo)",
+      "summary": "[RESOLVED] Increased error rates",
+      "status": 1,
+      "date": 1328653732,
+      "service": "simpledb-sa-east-1",
+      "description": "<div><span class=\"yellowfg\"> 2:32 PM PST</span>&nbsp;We are seeing increased error rates to CreateDomain, DeleteDomain and ListDomains API calls in SimpleDB in the SA-EAST-1 region. All other API calls are operating normally.</div><div><span class=\"yellowfg\"> 2:42 PM PST</span>&nbsp;We have resolved this issue. The service is operating normally. </div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon ElastiCache (Singapore)",
+      "summary": "[Resolved] Increased Error Rates for ElastiCache APIs ",
+      "status": 1,
+      "date": 1328839119,
+      "service": "elasticache-ap-southeast-1",
+      "description": "<div><span class=\"yellowfg\"> 6:03 PM PST</span>&nbsp;We are currently experiencing increased error rates for ElastiCache APIs in the AP-SOUTHEAST-1 Region. Requests to create and manage Cache Clusters and Cache Nodes may fail. We are working to resolve the issue. </div><div><span class=\"yellowfg\"> 6:41 PM PST</span>&nbsp;Between 5:55 PM and 6:27 PM PST, ElastiCache API requests were experiencing increased error rates in the AP-SOUTHEAST-1 region. The issue has been corrected and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Singapore)",
+      "summary": "[Resolved] Network connectivity impaired",
+      "status": 1,
+      "date": 1328844425,
+      "service": "EC2APac",
+      "description": "<div><span class=\"yellowfg\"> 7:28 PM PST</span>&nbsp;Between 5:53 PM and 06:03 PM PST network connectivity was impaired to instances in the AP-SOUTHEAST-1 Region. Requests to the EC2 APIs also experienced increased error rates. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Oregon)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "status": 2,
+      "date": 1329162459,
+      "service": "ec2-us-west-2",
+      "description": "<div><span class=\"yellowfg\">11:50 AM PST</span>&nbsp;We are investigating increased error rates and latencies for the EC2 APIs in the US-WEST-2 Region.</div><div><span class=\"yellowfg\">12:38 PM PST</span>&nbsp;Between 11:35 AM and 12:20 PM PST EC2 APIs in the US-WEST-2 Region experienced increased error rates and latencies. A small number of EBS volumes also saw increased IO latencies during this time. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Storage Service (Oregon)",
+      "summary": "[RESOLVED] Increased errors",
+      "status": 3,
+      "date": 1329162659,
+      "service": "s3-us-west-2",
+      "description": "<div><span class=\"yellowfg\">11:53 AM PST</span>&nbsp;We are investigating increased errors for requests to our US-WEST-2 region.</div><div><span class=\"yellowfg\">12:24 PM PST</span>&nbsp;From 11:35AM PST to 12:12PM PST requests to the US-WEST-2 region experienced a high error rate.  The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Notification Service (Oregon)",
+      "summary": "[RESOLVED] Increased errors",
+      "status": 3,
+      "date": 1329163871,
+      "service": "sns-us-west-2",
+      "description": "<div><span class=\"yellowfg\">12:12 PM PST</span>&nbsp;We are investigating increased error rates for all SNS APIs in US-WEST-2 Region.</div><div><span class=\"yellowfg\">12:40 PM PST</span>&nbsp;Between 11:35 AM and 12:12 PM PST APIs in the US-WEST-2 region experienced increased error rates and latencies. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Simple Queue Service (Oregon)",
+      "summary": "[RESOLVED] Increased errors",
+      "status": 3,
+      "date": 1329163938,
+      "service": "sqs-us-west-2",
+      "description": "<div><span class=\"yellowfg\">12:13 PM PST</span>&nbsp;We are investigating increased error rates for all SQS APIs in US-WEST-2 Region.</div><div><span class=\"yellowfg\">12:41 PM PST</span>&nbsp;Between 11:35 AM and 12:12 PM PST APIs in the US-WEST-2 region experienced increased error rates and latencies. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Relational Database Service (Oregon)",
+      "summary": "[RESOLVED] Increased error rates ",
+      "status": 2,
+      "date": 1329163986,
+      "service": "rds-us-west-2",
+      "description": "<div><span class=\"yellowfg\">12:18 PM PST</span>&nbsp;We are investigating increased error rates and latencies in the US-WEST-2 Region.</div><div><span class=\"yellowfg\">12:34 PM PST</span>&nbsp;Between 11:35 AM and 12:12 PM PST RDS APIs in the US-WEST-2 region experienced increased error rates and latencies. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon CloudWatch (Oregon)",
+      "summary": "[RESOLVED] Increased errors",
+      "status": 3,
+      "date": 1329164307,
+      "service": "cloudwatch-us-west-2",
+      "description": "<div><span class=\"yellowfg\">12:20 PM PST</span>&nbsp;We are investigating failure rates for CloudWatch APIs and delayed metrics in US-WEST-2.</div><div><span class=\"yellowfg\">12:32 PM PST</span>&nbsp;From 11:35 AM PST to 12:20 PM PST, CloudWatch API requests to the US-WEST-2 region experienced a high error rate and metrics were delayed. During this time, CloudWatch alarms set on delayed metrics may have transitioned into an \"INSUFFICIENT DATA\" state. The issue has been resolved. Both CloudWatch metrics and alarms services are operating normally. </div>",
+      "details": ""
+    },
+    {
+      "service_name": "AWS CloudFormation (Oregon)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "status": 2,
+      "date": 1329165715,
+      "service": "cloudformation-us-west-2",
+      "description": "<div><span class=\"yellowfg\">12:43 PM PST</span>&nbsp;Between 11:34am and 12:20pm PST, we experienced increased error rates for the AWS CloudFormation APIs in the US-WEST-2 Region.</div>",
+      "details": ""
+    },
+    {
+      "service_name": "Amazon Elastic MapReduce (Oregon)",
+      "summary": "[RESOLVED] Increased errors",
+      "status": 3,
+      "date": 1329165821,
+      "service": "emr-us-west-2",
+      "description": "<div><span class=\"yellowfg\">12:45 PM PST</span>&nbsp;From 11:35AM PST to 12:20PM PST requests to the US-WEST-2 region experienced a high error rate. The issue has been resolved and the service is operating normally.</div>",
+      "details": ""
+    }
+  ],
+  "current": [
+    {
+      "service_name": "Amazon Virtual Private Cloud (Singapore)",
+      "summary": "[RESOLVED] Elevated Packet Loss",
+      "status": 0,
+      "date": 1329345360,
+      "service": "vpc-ap-southeast-1",
+      "description": "<div><span class=\"yellowfg\"> 3:03 PM PST</span>&nbsp;Customer are experiencing elevated packet loss from VPC instances in the Singapore (AP-SOUTHEAST-1) region.</div><div><span class=\"yellowfg\"> 3:04 PM PST</span>&nbsp;From 1:54PM PDT \" 2:36PM PDT, customers experienced elevated packet loss from VPC instances in the Singapore (AP-SOUTHEAST-1) region to the Internet and VPN. The packet loss issue has been corrected and the service is now operating normally.</div>",
+      "details": ""
+    }
+  ]
+}

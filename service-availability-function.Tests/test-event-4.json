@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "Amazon Elastic File System (Oregon)",
+  "summary": "[RESOLVED] Increased Error Rates",
+  "date": "1527800578",
+  "status": 1,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\"> 2:03 PM PDT</span>&nbsp;We are investigating increased error rates for file system requests in the US-WEST-2 Region.</div><div><span class=\"yellowfg\"> 2:58 PM PDT</span>&nbsp;Between 1:00 PM and 2:29 PM PDT, we experienced increased error rates for file system read/write requests in the US-WEST-2 Region. The issue has been resolved and the service is operating normally.</div>",
+  "service": "elasticfilesystem-us-west-2"
+}

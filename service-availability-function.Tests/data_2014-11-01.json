@@ -1,0 +1,212 @@
+﻿{
+  "archive": [
+    {
+      "service_name": "Amazon Relational Database Service (N. Virginia)",
+      "summary": "[RESOLVED] Increased Create and Reboot times ",
+      "date": "1411500544",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\">12:34 PM PDT</span>&nbsp;We are investigating increased create and reboot times in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 1:03 PM PDT</span>&nbsp;We are continuing to investigate increased create and reboot times in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 1:20 PM PDT</span>&nbsp;Between 11:29 AM PDT and 1:16 PM PDT we experienced increased create and reboot times in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "rds-us-east-1"
+    },
+    {
+      "service_name": "Amazon ElastiCache (N. Virginia)",
+      "summary": "[RESOLVED] Increased Create and Reboot times ",
+      "date": "1411501148",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\">12:44 PM PDT</span>&nbsp;We are currently experiencing increased create and reboot times in the US-EAST-1 Region. Existing cache nodes have not been affected. We are working to resolve the issue.</div><div><span class=\"yellowfg\"> 1:24 PM PDT</span>&nbsp;Between 11:29 AM PDT and 1:16 PM PDT we experienced increased create and reboot times in the US-EAST-1 Region. Existing cache nodes were not affected. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elasticache-us-east-1"
+    },
+    {
+      "service_name": "Amazon Flexible Payments Service",
+      "summary": "[RESOLVED] Increased API Error rates and Latency",
+      "date": "1411630295",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\">12:32 AM PDT</span>&nbsp;We are investigating increased error rates and latencies impacting ASP, Pay, Reserve and Settle APIs in the North America Region.</div><div><span class=\"yellowfg\"> 1:28 AM PDT</span>&nbsp;We can confirm increased error rates and latencies impacting ASP, Pay, Reserve and Settle APIs in the North America Region. We are working to root-cause and recover the system.</div><div><span class=\"yellowfg\"> 2:14 AM PDT</span>&nbsp;Between September 24 11:55 PM PDT and September 25 1:30 AM PDT, FPS experienced elevated error rates and latencies impacting ASP, Pay, Reserve and Settle APIs in the North America Region. The issue has been resolved and the service is now operating normally.</div>",
+      "service": "fps"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Network Connectivity",
+      "date": "1412161213",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 4:01 AM PDT</span>&nbsp;Between 3:12 AM and 3:16 AM PDT we experienced impaired Internet connectivity affecting some instances in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Network connectivity",
+      "date": "1412295481",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 5:19 PM PDT</span>&nbsp;We are investigating DNS resolution issues affecting some instances in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 6:11 PM PDT</span>&nbsp;We have identified the root cause and continue to make progress in correcting the DNS resolution issues affecting some instances in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 6:44 PM PDT</span>&nbsp;Between 3:22 PM and 6:20 PM PDT we experienced DNS resolution issues affecting some instances in a single Availability Zone in the US-EAST-1 Region. During this time, DNS resolutions made from some EC2 instances may have returned public IP addresses instead of private IP addresses. The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Relational Database Service (N. Virginia)",
+      "summary": "[RESOLVED] Network connectivity",
+      "date": "1412295814",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 5:33 PM PDT</span>&nbsp;We are investigating connectivity issues affecting some instances in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 6:19 PM PDT</span>&nbsp;We have identified the root cause and continue to make progress in resolving the connectivity issues affecting some instances in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 6:53 PM PDT</span>&nbsp;Between 3:22 PM PDT and 6:20 PM PDT we experienced connectivity issues affecting some database instances in a single Availability Zone in the US-EAST-1 Region.  The issue has been resolved and the service is operating normally.</div>",
+      "service": "rds-us-east-1"
+    },
+    {
+      "service_name": "Amazon ElastiCache (N. Virginia)",
+      "summary": "[RESOLVED] Network connectivity",
+      "date": "1412297684",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 5:55 PM PDT</span>&nbsp;We are investigating connectivity issues affecting some cache nodes in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 6:22 PM PDT</span>&nbsp;We have identified the root cause and continue to make progress in resolving the connectivity issues affecting some cache nodes in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 6:50 PM PDT</span>&nbsp;Between 3:22 PM PDT and 6:20 PM PDT we experienced connectivity issues affecting some cache nodes in a single Availability Zone in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elasticache-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Networking connectivity",
+      "date": "1412423152",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 4:48 AM PDT</span>&nbsp;We are investigating DNS resolution issues affecting some instances in a single Availability Zone in the US-EAST-1 Region.</div><div><span class=\"yellowfg\"> 5:21 AM PDT</span>&nbsp;Between 2:49 AM and 5:02 AM PDT we experienced DNS resolution issues affecting some instances in a single Availability Zone in the US-EAST-1 Region. During this time, DNS resolutions made from some EC2 instances may have returned public IP addresses instead of private IP addresses. The issue has been resolved and the service is operating normally. </div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Route 53",
+      "summary": "[RESOLVED] Domain Registration and Transfer error rate",
+      "date": "1412707466",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\">11:49 AM PDT</span>&nbsp;We are investigating increased error rates impacting Domain Registration and Transfer. This does not impact Route 53 DNS Service.</div><div><span class=\"yellowfg\">12:43 PM PDT</span>&nbsp;Between 11:16 AM and 11:51 AM PDT we experienced elevated error rates impacting Domain Registration and Transfer. This did not impact Route 53 DNS Service. The issue has been resolved and the service is operating normally.</div>",
+      "service": "route53"
+    },
+    {
+      "service_name": "Amazon CloudWatch (Singapore)",
+      "summary": "[RESOLVED] Elevated API faults and alarm delays in AP-SOUTHEAST-1",
+      "date": "1413055077",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\">12:19 PM PDT</span>&nbsp;We are investigating increased faults for CloudWatch alarms APIs and delays in processing some alarms in the AP-SOUTHEAST-1 region.</div><div><span class=\"yellowfg\">12:44 PM PDT</span>&nbsp;Between 11:40 AM PDT and 12:25 PM PDT, customers may have experienced elevated alarms API faults and delayed alarms in the AP-SOUTHEAST-1 region. We have resolved the issue. The service is operating normally.</div>",
+      "service": "cloudwatch-ap-southeast-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Oregon)",
+      "summary": "[RESOLVED] Degraded EBS Volume Performance",
+      "date": "1413302040",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 9:04 AM PDT</span>&nbsp;We are currently investigating degraded performance for some EBS volumes in a single Availability Zone in the US-WEST-2 Region.</div><div><span class=\"yellowfg\"> 9:34 AM PDT</span>&nbsp;Between 8:40 AM and 9:25 AM PDT, some EBS volumes in a single Availability Zone in the US-WEST-2 Region experienced degraded performance. The issue has been resolved and the service is now operating normally.</div>",
+      "service": "ec2-us-west-2"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (N. Virginia)",
+      "summary": "[RESOLVED] Increased API error rates in the US-EAST-1 region",
+      "date": "1413901572",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:27 AM PDT</span>&nbsp;We are currently investigating increased error rates and latencies for the EC2 APIs in the US-EAST-1 region.</div><div><span class=\"yellowfg\"> 7:45 AM PDT</span>&nbsp;We can confirm no impact to the EC2 APIs in the US-EAST-1 region. The service is operating normally.</div>",
+      "service": "ec2-us-east-1"
+    },
+    {
+      "service_name": "Amazon Kinesis (N. Virginia)",
+      "summary": "[RESOLVED] Increased error rates for PutRecord calls",
+      "date": "1414100830",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 2:55 PM PDT</span>&nbsp;Between 02:00 PM PDT and 02:07 PM PDT we experienced an increased error rate for the PutRecord API, in the US-EAST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "kinesis-us-east-1"
+    },
+    {
+      "service_name": "AWS OpsWorks (N. Virginia)",
+      "summary": "[RESOLVED] Elevated error rates in instance communications",
+      "date": "1414189197",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 3:49 PM PDT</span>&nbsp;Between 2:25 PM PDT and 3:10 PM PDT we experienced an increased error rate in communicating with instances. Some instances were reported in the 'connection_lost' state during that time. A small number of instances may have been restarted but all should have recovered. The issue has been resolved and the service is operating normally.</div>",
+      "service": "opsworks-us-east-1"
+    },
+    {
+      "service_name": "Amazon Elastic Compute Cloud (Ireland)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "date": "1414633187",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 6:41 PM PDT</span>&nbsp;We are investigating increased error rates and latencies for the EC2 APIs in the EU-WEST-1 Region.</div><div><span class=\"yellowfg\"> 7:11 PM PDT</span>&nbsp;Between 6:18 PM and 6:55 PM PDT we experienced increased error rates and latencies for the EC2 APIs in the EU-WEST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "ec2-eu-west-1"
+    },
+    {
+      "service_name": "Amazon Elastic Load Balancing (Ireland)",
+      "summary": "[RESOLVED] Increased API error rates",
+      "date": "1414633275",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 6:45 PM PDT</span>&nbsp;We are investigating increased error rates and latencies for the ELB APIs in the EU-WEST-1 Region.</div><div><span class=\"yellowfg\"> 7:12 PM PDT</span>&nbsp;Between 6:18 PM and 6:55 PM PDT we experienced increased error rates and latencies for the ELB APIs in the EU-WEST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "elb-eu-west-1"
+    },
+    {
+      "service_name": "AWS Management Console",
+      "summary": "[RESOLVED] Elevated error rates",
+      "date": "1414633524",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 6:57 PM PDT</span>&nbsp;We are currently investigating elevated error rates for the AWS Management Console in the EU-WEST-1 Region.</div><div><span class=\"yellowfg\"> 7:14 PM PDT</span>&nbsp;Between 6:18 PM and 6:55 PM PDT we experienced increased error rates and latencies for the AWS Management Console in the EU-WEST-1 Region. The errors have recovered and the AWS Management Console is now operating normally.</div>",
+      "service": "management-console"
+    },
+    {
+      "service_name": "Auto Scaling (Ireland)",
+      "summary": "[RESOLVED] Auto Scaling API errors",
+      "date": "1414634353",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:00 PM PDT</span>&nbsp;We are investigating increased error rates and latencies for API calls in the EU-WEST-1 region.</div><div><span class=\"yellowfg\"> 7:14 PM PDT</span>&nbsp;Between 6:18 PM and 6:55 PM PDT we experienced increased error rates and latencies for the Auto Scaling APIs in the EU-WEST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "autoscaling-eu-west-1"
+    },
+    {
+      "service_name": "Amazon CloudWatch (Ireland)",
+      "summary": "[RESOLVED ] Elevated API faults and latencies in EU-WEST-1 ",
+      "date": "1414635480",
+      "status": "0",
+      "details": "",
+      "description": null,
+      "service": "cloudwatch-eu-west-1"
+    },
+    {
+      "service_name": "Amazon CloudSearch (Ireland)",
+      "summary": "[RESOLVED] Increased API Error Rates",
+      "date": "1414635559",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:22 PM PDT</span>&nbsp;Between 6:18 PM and 6:55 PM PDT we experienced increased error rates and latencies for the CloudSearch APIs in the EU-WEST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "cloudsearch-eu-west-1"
+    },
+    {
+      "service_name": "Amazon Relational Database Service (Ireland)",
+      "summary": "[RESOLVED] Increased API latencies ",
+      "date": "1414636010",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:28 PM PDT</span>&nbsp;Between 6:18 PM and 6:55PM PDT we experienced increased error rates accessing the RDS console and APIs in the EU-WEST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "rds-eu-west-1"
+    },
+    {
+      "service_name": "Amazon CloudWatch (Ireland)",
+      "summary": "[RESOLVED] Elevated API faults and latencies in EU-WEST-1",
+      "date": "1414636368",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:35 PM PDT</span>&nbsp;Between 6:18 PM and 6:55 PM PDT, customers experienced elevated faults when calling CloudWatch APIs in the EU-WEST-1 region. Some metrics were delayed, and CloudWatch alarms on delayed metrics transitioned into INSUFFICIENT_DATA state. We have resolved the issue. Delayed metrics are in the process of backfilling in CloudWatch console graphs and for API retrieval. The service is operating normally.</div>",
+      "service": "cloudwatch-eu-west-1"
+    },
+    {
+      "service_name": "Amazon Kinesis (Ireland)",
+      "summary": "[RESOLVED] Increased API error rates and latencies",
+      "date": "1414636947",
+      "status": "1",
+      "details": "",
+      "description": "<div><span class=\"yellowfg\"> 7:52 PM PDT</span>&nbsp;Between 6:14 PM and 6:59 PM PDT, customers experienced increased API error rates and latencies in the EU-WEST-1 Region. The issue has been resolved and the service is operating normally.</div>",
+      "service": "kinesis-eu-west-1"
+    }
+  ],
+  "current": []
+}
