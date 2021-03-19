@@ -14,12 +14,12 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - dotnet build
+      - dotnet build --configuration Release
 
   post_build:
     commands:
       - echo Test stated on `date`
-      - dotnet test --configuration Release
+      - dotnet test --configuration Release --filter DisplayName\!~Live_
       - EXIT_CODE=$?
       - echo Tests resulted in exit code $EXIT_CODE
       - if [ $EXIT_CODE -eq 0 ]; then aws cloudformation validate-template --template-body file://../service-availability-function/service-availability-function.template; fi
