@@ -27,6 +27,7 @@ phases:
 
 artifacts:
   name: BuildOutput
+  base-directory: $CODEBUILD_SRC_DIR
   files:
-    - bin/Release/netcoreapp3.1/$PROJECT_NAME.template
+    - service-availability-function/bin/Release/netcoreapp3.1/$PROJECT_NAME.template
   discard-paths: yes  
