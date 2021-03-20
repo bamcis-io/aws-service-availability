@@ -18,15 +18,15 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Build Number $CODEBUILD_BUILD_NUMBER
-      - dotnet lambda package --configuration Release --framework netcoreapp3.1 --template service-availability-function.template --output-template bin/Release/netcoreapp3.1/$PROJECT_NAME.template --output-package $PROJECT_NAME-$CODEBUILD_START_TIME.zip
+      - dotnet lambda package --configuration Release --framework netcoreapp3.1 --template service-availability-function.template --output-template bin/Release/netcoreapp3.1/$PROJECT_NAME.template --output-package bin/Release/netcoreapp3.1/$PROJECT_NAME-$CODEBUILD_START_TIME.zip
 
   post_build:
     commands:
       - echo Copying code zip to S3
-      - aws s3 cp $PROJECT_NAME-$CODEBUILD_START_TIME.zip s3://$BUCKET/$PROJECT_NAME-$CODEBUILD_START_TIME.zip --sse aws:kms --sse-kms-key-id $CODEBUILD_KMS_KEY_ID --acl bucket-owner-full-control
+      - aws s3 cp bin/Release/netcoreapp3.1/$PROJECT_NAME-$CODEBUILD_START_TIME.zip s3://$BUCKET/$PROJECT_NAME-$CODEBUILD_START_TIME.zip --sse aws:kms --sse-kms-key-id $CODEBUILD_KMS_KEY_ID --acl bucket-owner-full-control
 
 artifacts:
   name: BuildOutput
   files:
-    - service-availability-function/bin/Release/netcoreapp3.1/$PROJECT_NAME.template
+    - bin/Release/netcoreapp3.1/$PROJECT_NAME.template
   discard-paths: yes  
