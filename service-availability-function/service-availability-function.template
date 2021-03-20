@@ -23,6 +23,14 @@
 	"DnsValidationDomain" : {
 	  "Type" : "String",
 	  "Description" : "The domain where you will validate ownership for the certificate that is created. For example, if your custom domain name is www.example.com, you'd provide example.com as the value here."
+	},
+	"CodeBucket" : {
+	    "Description" : "The bucket where the code is uploaded",
+		"Type" : "String"
+	},
+	"CodeKey" : {
+	    "Description" : "The object key of the lambda deployment package",
+		"Type" : "String"
 	}
   },
 
@@ -720,7 +728,14 @@
         "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::GetData",
         "Runtime":  "dotnetcore3.1",
 		"Tracing" : "Active",
-        "CodeUri": "",
+        "CodeUri": {
+		  "Bucket" : {
+		      "Ref" : "CodeBucket"
+		  },
+		  "Key" : {
+		      "Ref" : "CodeKey"
+		  }
+		},
         "MemorySize": 128,
         "Timeout": 120,
         "Role": {
@@ -757,7 +772,14 @@
         "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ScheduledLoadDataFromSource",
         "Runtime":  "dotnetcore3.1",
 		"Tracing" : "Active",
-        "CodeUri": "",
+        "CodeUri": {
+		  "Bucket" : {
+		      "Ref" : "CodeBucket"
+		  },
+		  "Key" : {
+		      "Ref" : "CodeKey"
+		  }
+		},
         "MemorySize": 512,
         "Timeout": 900,
         "Role": {
@@ -792,7 +814,14 @@
         "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ManualLoadDataFromSource",
         "Runtime":  "dotnetcore3.1",
 		"Tracing" : "Active",
-        "CodeUri": "",
+        "CodeUri": {
+		  "Bucket" : {
+		      "Ref" : "CodeBucket"
+		  },
+		  "Key" : {
+		      "Ref" : "CodeKey"
+		  }
+		},
         "MemorySize": 512,
         "Timeout": 900,
         "Role": {
@@ -829,7 +858,14 @@
         "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ScheduledExportDataFromDynamoDB",
         "Runtime":  "dotnetcore3.1",
 		"Tracing" : "Active",
-        "CodeUri": "",
+        "CodeUri": {
+		  "Bucket" : {
+		      "Ref" : "CodeBucket"
+		  },
+		  "Key" : {
+		      "Ref" : "CodeKey"
+		  }
+		},
         "MemorySize": 512,
         "Timeout": 900,
         "Role": {
@@ -871,7 +907,14 @@
         "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ManualExportDataFromDynamoDB",
         "Runtime":  "dotnetcore3.1",
 		"Tracing" : "Active",
-        "CodeUri": "",
+        "CodeUri": {
+		  "Bucket" : {
+		      "Ref" : "CodeBucket"
+		  },
+		  "Key" : {
+		      "Ref" : "CodeKey"
+		  }
+		},
         "MemorySize": 512,
         "Timeout": 900,
         "Role": {
