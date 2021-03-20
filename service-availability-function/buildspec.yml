@@ -28,5 +28,5 @@ phases:
 artifacts:
   name: BuildOutput
   files:
-    - service-availability-function/bin/Release/netcoreapp3.1/$PROJECT_NAME.template
+    - service-availability-function/bin/Release/netcoreapp3.1/$PROJECT_NAME-$CODEBUILD_START_TIME.template
   discard-paths: yes  
