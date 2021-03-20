@@ -24,6 +24,7 @@ phases:
     commands:
       - echo Copying code zip to S3
       - aws s3 cp bin/Release/netcoreapp3.1/$PROJECT_NAME-$CODEBUILD_START_TIME.zip s3://$BUCKET/$PROJECT_NAME-$CODEBUILD_START_TIME.zip --sse aws:kms --sse-kms-key-id $CODEBUILD_KMS_KEY_ID --acl bucket-owner-full-control
+      - ls -R
 
 artifacts:
   name: BuildOutput
