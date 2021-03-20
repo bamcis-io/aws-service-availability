@@ -1220,10 +1220,11 @@
 		"Fn::Sub" : "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/api/serviceavailability"   
 	 }
    },
-   "APIGatewayCustomUrl" : {
-     "Description" : "The URL to access the API directly.",
-	 "Value" : {	
+    "APIGatewayCustomUrl" : {
+      "Description" : "The URL to access the API directly.",
+	  "Value" : {	
 		"Fn::Sub" : "https://${CustomDomainName}/api/serviceavailability"   
-	 }
-   },
+	  }
+    }
+  }
 }
