@@ -17,7 +17,8 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - dotnet lambda package-ci --configuration Release --framework netcoreapp3.1 --s3-bucket $BUCKET --template service-availability-function.template --output-template bin/Release/netcoreapp3.1/$PROJECT_NAME.template --output-package bin/Release/netcoreapp3.1/$PROJECT_NAME.zip
+      - echo KMS KEY - $CODEBUILD_KMS_KEY
+      - dotnet lambda package-ci --kms-key $CODEBUILD_KMS_KEY --configuration Release --framework netcoreapp3.1 --s3-bucket $BUCKET --template service-availability-function.template --output-template bin/Release/netcoreapp3.1/$PROJECT_NAME.template --output-package bin/Release/netcoreapp3.1/$PROJECT_NAME.zip
 
 artifacts:
   name: BuildOutput
