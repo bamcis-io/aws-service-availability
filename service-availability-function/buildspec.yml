@@ -32,6 +32,6 @@ artifacts:
   name: BuildOutput
   base-directory: $CODEBUILD_SRC_DIR
   files:
-    - service-availability-function/service-availability-function.template
+    - service-availability-function/$PROJECT_NAME.template
     - service-availability-function/CloudFormationConfig.json
   discard-paths: yes  
