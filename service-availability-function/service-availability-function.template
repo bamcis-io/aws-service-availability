@@ -511,7 +511,16 @@
 	"ApiGateway" : {
 	  "Type" : "AWS::Serverless::Api",
 	  "Properties" : {
-	    "StageName" : "Prod",
+	    "Domain" : {
+		  "CertificateArn" : {
+		    "Ref" : "Certificate"
+		  },
+		  "DomainName" : {
+		    "Ref" : "CustomDomainName"
+		  },
+		  "SecurityPolicy" : "TLS_1_2"
+		},
+	    "StageName" : "Prod",		 
 		"DefinitionBody" : {
 		  "swagger" : "2.0",
 		  "info" : {
@@ -850,55 +859,6 @@
 	  }
     },
 
-	"ScheduledExportSHDData" : {
-      "Type" : "AWS::Serverless::Function",
-      "Properties": {
-	    "FunctionName" : "ScheduledExportServiceHealthDashboardData",
-		"Description" : "Exports the SHD from DynamoDB to S3 on a schedule",
-        "Handler": "service-availability-function::BAMCIS.ServiceAvailability.Entrypoint::ScheduledExportDataFromDynamoDB",
-        "Runtime":  "dotnetcore3.1",
-		"Tracing" : "Active",
-        "CodeUri": {
-		  "Bucket" : {
-		      "Ref" : "CodeBucket"
-		  },
-		  "Key" : {
-		      "Ref" : "CodeKey"
-		  }
-		},
-        "MemorySize": 512,
-        "Timeout": 900,
-        "Role": {
-			"Fn::GetAtt" : ["ServiceAvailabilityLambdaRole", "Arn"]
-		},
-        "Policies": null,
-        "Events": {
-			"LoadData": {
-				"Type": "Schedule",
-				"Properties": {
-					"Enabled" : true,
-					"Schedule" : "cron(30 12 * * ? *)",
-					"Description" : "Exports the data once a day at 12:30"
-				}
-			}
-        },
-		"Environment" : {
-		  "Variables" : {
-			"ExtractionFailureMetricName" : {
-			  "Fn::FindInMap" : [ "Constants", "MetricNames", "ExtractionFailures" ]
-			},
-			"EXPORT_BUCKET" : {
-			    "Ref" : "DataBucket"
-			},
-			"DYNAMODB_TABLE_ARN" : {
-			   "Fn::GetAtt" : [ "ServiceHealthDashboardDataTable", "Arn" ]
-			}
-
-		  }
-	    }
-	  }
-    },
-
 	"ManualExportSHDData" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
@@ -952,57 +912,6 @@
 	    }
 	  }
     },
-	
-	"WAFv2WebAcl" : {
-	  "Type" : "AWS::WAFv2::WebACL",
-	  "Properties" : {
-	    "DefaultAction" : {
-	      "Block" : {}
-	    },
-		"VisibilityConfig" : {
-		  "CloudWatchMetricsEnabled" : true,
-		  "MetricName" : "InternalNetworkWebACL",
-		  "SampledRequestsEnabled" : false
-		},
-		"Scope" : "CLOUDFRONT",
-		"Name" : "internal-network-web-acl",
-		"Rules" : [
-		  {
-			"Action" : {
-			  "Allow" : {}
-			},
-			"Name" : "allow-internal-network",
-			"Priority" : 1,
-			"Statement" : {
-			  "IPSetReferenceStatement" : {
-			    "Arn" : {
-			      "Fn::GetAtt" : [ "WAFv2IPMatch", "Arn" ]
-			    }
-			  }
-			},
-			"VisibilityConfig" : {
-			  "CloudWatchMetricsEnabled" : true,
-		      "MetricName" : "AllowInternalNetworkOnly",
-		      "SampledRequestsEnabled" : false
-			}
-		  }
-		]
-	  }
-	},
-
-	"WAFv2IPMatch" : {
-	  "Type" : "AWS::WAFv2::IPSet",
-	  "Properties" : {
-	    "Addresses" : [
-		  {
-		      "Ref" : "AllowedIPRange"		    
-		  }
-		],
-		"IPAddressVersion" : "IPV4",
-		"Name" : "Amazon-IPSet",
-		"Scope" : "CLOUDFRONT"
-	  }
-	},
 
 	"Certificate" : {
 	    "Type" : "AWS::CertificateManager::Certificate",
@@ -1022,114 +931,6 @@
 			],
 			"ValidationMethod" : "DNS"
 		}
-	},
-
-	"CloudfrontDistribution" : {
-	  "Type" : "AWS::CloudFront::Distribution",
-	  "Properties" : {
-	    "DistributionConfig" : {
-		  "WebACLId" : {
-		    "Fn::GetAtt" : [ "WAFv2WebAcl", "Arn" ]
-		  },	 
-		"ViewerCertificate" : {
-		  "AcmCertificateArn" : {
-		    "Ref" : "Certificate"
-		  },
-		  "MinimumProtocolVersion" : "TLSv1.2_2019",
-		  "SslSupportMethod" : "sni-only"
-		}, 
-		"Aliases" : [
-		  {
-		    "Ref" : "CustomDomainName"
-		  }
-		],
-		"Origins" : [
-		    {
-			  "DomainName" : {
-			    "Fn::Sub" : "${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com"
-			  },
-			  "CustomOriginConfig" : {
-			    "HTTPSPort" : "443",
-				"OriginSSLProtocols" : [
-				   "TLSv1.2"
-				],
-				"OriginProtocolPolicy" : "https-only" 
-			  },
-			  "Id" : "APIGatewayOrigin",
-			  "OriginPath" : "/Prod"
-			},
-			{
-			  "DomainName" : {
-				"Fn::Sub" : "${WebsiteBucket}.s3-website-${AWS::Region}.amazonaws.com"
-			  },
-			  "CustomOriginConfig" : {
-				"HTTPPort" : "80",
-				"OriginProtocolPolicy" :  "http-only"			 
-			  },
-			  "Id" : "WebsiteOrigin",
-			  "OriginPath" : "",			   
-			  "OriginCustomHeaders" : [
-			    {
-			     "HeaderName" : "Referer",
-				 "HeaderValue" : {
-					"Ref" : "SharedSecret"
-				 }
-				}
-			  ]
-			}
-		  ],
-		  "Enabled" : true,
-		  "Comment" : "ServiceAvailability App Distribution",
-		  "DefaultCacheBehavior" : {
-		    "AllowedMethods" : [
-		      "GET",
-			  "HEAD"
-		    ],
-		    "TargetOriginId" : "WebsiteOrigin",
-			"ForwardedValues" : {
-			  "QueryString" : true,
-			  "Cookies" : { 
-			    "Forward" : "all"
-			  }	
-			},
-			"Compress" : true,
-			"ViewerProtocolPolicy" : "redirect-to-https"
-		  },
-		  "CacheBehaviors" : [
-				{
-					"AllowedMethods" : [
-						"DELETE", 
-						"GET", 
-						"HEAD", 
-						"OPTIONS", 
-						"PATCH", 
-						"POST", 
-						"PUT"
-					],
-					"TargetOriginId" : "APIGatewayOrigin",
-					 "Compress" : true,
-				"ForwardedValues" : {
-				  "QueryString" : true,
-				  "Cookies" : { 
-					"Forward" : "all"
-				  }
-				},
-			"PathPattern" : "/api/*",
-			"ViewerProtocolPolicy" : "redirect-to-https"
-			}
-		  ],
-		  "HttpVersion" : "http2",
-		   
-		  "Restrictions" : {
-		    "GeoRestriction" : {
-			  "Locations" : [
- 			    "US"
-			  ],
-			  "RestrictionType" : "whitelist"
-			}
-		  }
-		}
-	  }
 	},
 
 	"TimeZoneMap" : {
@@ -1414,34 +1215,15 @@
 
   "Outputs" : {
     "APIGatewayUrl" : {
-     "Description" : "The URL to access the API directly without caching.",
+     "Description" : "The URL to access the API directly.",
 	 "Value" : {	
 		"Fn::Sub" : "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/api/serviceavailability"   
 	 }
    },
-    "ApiCloudfrontUrl" : {
-	"Description" : "The URL to access the API through Cloudfront.",
-	  "Value" : {
-	    "Fn::Sub" : "https://${CloudfrontDistribution.DomainName}/api/serviceavailability"
-	  }
-	},
-	"ExportApiCloudfrontUrl" : {
-	"Description" : "The URL to manually initiate a data export to S3 through Cloudfront.",
-	  "Value" : {
-	    "Fn::Sub" : "https://${CloudfrontDistribution.DomainName}/api/serviceavailability/export"
-	  }
-	},
-	"LoadApiCloudfrontUrl" : {
-	"Description" : "The URL to manually initiate loading the data from the source to DynamoDB.",
-	  "Value" : {
-	    "Fn::Sub" : "https://${CloudfrontDistribution.DomainName}/api/serviceavailability/load"
-	  }	    
-	},
-	"WebsiteCloudfrontUrl" : {
-	"Description" : "The URL to access the web front end through Cloudfront.",
-	  "Value" : {
-	    "Fn::Sub" : "https://${CloudfrontDistribution.DomainName}"
-	  }
-	}
-  }
+   "APIGatewayCustomUrl" : {
+     "Description" : "The URL to access the API directly.",
+	 "Value" : {	
+		"Fn::Sub" : "https://${CustomDomainName}/api/serviceavailability"   
+	 }
+   },
 }
