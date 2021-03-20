@@ -18,14 +18,12 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Build Number $CODEBUILD_BUILD_NUMBER
-      - echo KMS Key $CODEBUILD_KMS_KEY_ID
-      - echo Start Time $CODEBUILD_START_TIME
       - dotnet lambda package --configuration Release --framework netcoreapp3.1 --template service-availability-function.template --output-template bin/Release/netcoreapp3.1/$PROJECT_NAME.template --output-package $PROJECT_NAME-$CODEBUILD_START_TIME.zip
 
   post_build:
     commands:
       - echo Copying code zip to S3
-      - aws s3 cp $PROJECT_NAME-$CODEBUILD_START_TIME.zip s3://$BUCKET/$PROJECT_NAME-$CODEBUILD_START_TIME.zip --sse-kms-key-id $CODEBUILD_KMS_KEY_ID --acl bucket-owner-full-control
+      - aws s3 cp $PROJECT_NAME-$CODEBUILD_START_TIME.zip s3://$BUCKET/$PROJECT_NAME-$CODEBUILD_START_TIME.zip --sse aws:kms --sse-kms-key-id $CODEBUILD_KMS_KEY_ID --acl bucket-owner-full-control
 
 artifacts:
   name: BuildOutput
