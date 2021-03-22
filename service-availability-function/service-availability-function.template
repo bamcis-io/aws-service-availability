@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
   "Transform" : "AWS::Serverless-2016-10-31",
-  "Description" : "AWS Service Availability serverless application.",
+  "Description" : "AWS Service Availability backend services.",
 
   "Parameters" : {
     "AdminEmail" : {
@@ -58,62 +58,6 @@
   },
 
   "Resources" : {
-
-    "WebsiteBucket" : {
-	  "Type" : "AWS::S3::Bucket",
-	  "Properties" : {
-	   "BucketName" : "aws-service-availability",
-	   "WebsiteConfiguration" : {	 
-	    "IndexDocument" : "index.html",
-	    "RoutingRules" : [
-		  {
-		    "RoutingRuleCondition" : { 
-			  "HttpErrorCodeReturnedEquals" : "404"
-			},
-			 "RedirectRule" : {
-			   "ReplaceKeyWith" : ""
-			 }
-		  }
-		]
-	   }
-	  }
-	},
-	"BucketPolicy" : {
-	  "Type" : "AWS::S3::BucketPolicy",
-	  "Properties" : {
-	   "Bucket" : {
-	     "Ref" : "WebsiteBucket"
-	   },
-	    "PolicyDocument" : {
-		  "Version":"2012-10-17",
-		  "Statement":[
-			{
-			  "Sid": "Allow get requests originating from Cloudfront only.",
-			  "Effect":"Allow",
-			  "Principal": {
-			    "AWS" : "*"
-			  },
-			  "Action":"s3:GetObject",
-			  "Resource": [
-				  {
-					"Fn::Sub" : "arn:${AWS::Partition}:s3:::${WebsiteBucket}/*"
-				  }
-			  ],
-			  "Condition":{
-				"StringEquals":{
-				  "aws:Referer":[
-					{
-						"Ref" : "SharedSecret"
-					}
-				  ]
-				}
-			  }
-			}
-		  ]
-		}
-	  }
-	},
-
 	"DataBucket" : {
 	  "Type" : "AWS::S3::Bucket",
 	  "Properties" : {
