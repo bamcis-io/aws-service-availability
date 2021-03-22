@@ -457,18 +457,19 @@
 		  "EndpointConfiguration" : "REGIONAL",
 		  "SecurityPolicy" : "TLS_1_2"
 		},
-	    "StageName" : "Prod",		 
+	    "StageName" : "Prod",		
+		"Description" : "The backend APIs for the AWS Service Availability services.",
+		"OpenApiVersion" : "3.0.1",
+		"EndpointConfiguration" : "REGIONAL",
+		"TracingEnabled" :  true,
+		"Name" : "AWS Service Availability API",		 
 		"DefinitionBody" : {
-		  "swagger" : "2.0",
+		  "openapi" : "3.0.1",
 		  "info" : {
 		    "version" : "1.0",
 			"title" : "ServiceAvailabilityApiGateway"
 		  },
-		  "host": "",
-		  "basePath" : "/Prod",
-		  "schemes" : [
-		    "https"
-		  ],
+
 		  "paths" : {
 		    "/api/serviceavailability" : {
 			  "get" : {
@@ -476,30 +477,32 @@
 				  {
 				    "name" : "start",
 					"in" : "query",
-					"required" : false,
-					"type" : "string"
+					"schema" : {
+					  "type" : "string"
+					}
 				  },
 				  {
 				    "name" : "regions",
 					"in" : "query",
-					"required" : false,
-					"type" : "string"
+					"schema" : {
+					  "type" : "string"
+					}
 				  },
 				  {
 				    "name" : "services",
 					"in" : "query",
-					"required" : false,
-					"type" : "string"
+					"schema" : {
+					  "type" : "string"
+					}
 				  },
 				  {
 				    "name" : "end",
 					"in" : "query",
-					"required" : false,
-					"type" : "string"
+					"schema" : {
+					  "type" : "string"
+					}
 				  }
 				],
-				"responses": {
-				},
 				"x-amazon-apigateway-integration": {
 				  "uri": {
 				    "Fn::Sub" : "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetSHDData.Arn}/invocations"
@@ -510,26 +513,27 @@
 				}
 			  },
 			  "options": {
-				"consumes": [
-				  "application/json"
-				],
-				"produces": [
-				  "application/json"
-				],
 				"responses": {
 				  "200": {
 					"description": "200 response",
 					"headers": {
 					  "Access-Control-Allow-Origin": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  },
 					  "Access-Control-Allow-Methods": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  },
 					  "Access-Control-Allow-Headers": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  }
-					}
+					},
+					"content" : {}
 				  }
 				},
 				"x-amazon-apigateway-integration": {
@@ -553,8 +557,6 @@
 			},
 			"/api/serviceavailability/export" : {
 			  "get" : {
-			    "parameters" : [],
-			    "responses": {},
 				"x-amazon-apigateway-integration": {
 				  "uri": {
 				    "Fn::Sub" : "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ManualExportSHDData.Arn}/invocations"
@@ -565,26 +567,27 @@
 				}
 			  },
 			  "options": {
-				"consumes": [
-				  "application/json"
-				],
-				"produces": [
-				  "application/json"
-				],
 				"responses": {
 				  "200": {
 					"description": "200 response",
 					"headers": {
 					  "Access-Control-Allow-Origin": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  },
 					  "Access-Control-Allow-Methods": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  },
 					  "Access-Control-Allow-Headers": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  }
-					}
+					},
+					"content" : {}
 				  }
 				},
 				"x-amazon-apigateway-integration": {
@@ -608,8 +611,6 @@
 			},
 			"/api/serviceavailability/load" : {
 			  "get" : {
-			    "parameters" : [],
-			    "responses": {},
 				"x-amazon-apigateway-integration": {
 				  "uri": {
 				    "Fn::Sub" : "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ManualLoadSHDData.Arn}/invocations"
@@ -620,26 +621,27 @@
 				}
 			  },
 			  "options": {
-				"consumes": [
-				  "application/json"
-				],
-				"produces": [
-				  "application/json"
-				],
 				"responses": {
 				  "200": {
 					"description": "200 response",
 					"headers": {
 					  "Access-Control-Allow-Origin": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  },
 					  "Access-Control-Allow-Methods": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  },
 					  "Access-Control-Allow-Headers": {
-						"type": "string"
+						"schema" : {
+					      "type" : "string"
+					    }
 					  }
-					}
+					},
+					"content" : {}
 				  }
 				},
 				"x-amazon-apigateway-integration": {
@@ -661,7 +663,8 @@
 				}
 			  }
 			}
-		  }
+		  },
+		  "components" : {}
 		}
 	  }
 	},
