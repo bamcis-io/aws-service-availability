@@ -8,17 +8,9 @@
 	  "Description" : "The email address of an admin to email when a Regex miss occurs. Leave blank to not set up an SNS topic.",
 	  "Type" : "String"
 	},
-	"AllowedIPRange" : {
-	  "Description" : "The IP range that is allowed to access the API.",
-	  "Type" : "String"
-	},
-	"SharedSecret" : {
-	   "Type" : "String",
-	   "Description" : "A shared secret that will be used to ensure only the Cloudfront distribution can access the S3 website content."
-	},
 	"CustomDomainName" : {
 	    "Type" : "String",
-		"Description" : "The alternate domain name to use in the CloudFront distribution"
+		"Description" : "The custom domain name to use with API gateway."
 	},
 	"DnsValidationDomain" : {
 	  "Type" : "String",
@@ -462,6 +454,7 @@
 		  "DomainName" : {
 		    "Ref" : "CustomDomainName"
 		  },
+		  "EndpointConfiguration" : "REGIONAL",
 		  "SecurityPolicy" : "TLS_1_2"
 		},
 	    "StageName" : "Prod",		 
