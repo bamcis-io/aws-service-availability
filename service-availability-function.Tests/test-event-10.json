@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "Amazon CloudWatch (Sao Paulo)",
+  "summary": "[RESOLVED] Delayed metrics in SA-EAST-1",
+  "date": "1446703630",
+  "status": 1,
+  "details": "",
+  "description": "<div><span class=\"yellowfg\">10:12 PM PST</span>&nbsp;We are investigating increased delays for CloudWatch metrics in the SA-EAST-1 Region. CloudWatch alarms may transition into \"INSUFFICIENT_DATA\" state if set on delayed metrics.</div><div><span class=\"yellowfg\">10:32 PM PST</span>&nbsp;We can confirm delays in some CloudWatch metrics in the SA-EAST-1 Region. We are actively working to resolve the issue.</div><div><span class=\"yellowfg\">11:16 PM PST</span>&nbsp;We are still investigating delays with CloudWatch metrics in the SA-EAST-1 Region and are actively working to resolve the issue.</div><div><span class=\"yellowfg\">Nov 5,  2:08 AM PST</span>&nbsp;We are still seeing recovery in the CloudWatch metric delays in the SA-EAST-1 region. We are continuing to work to fully resolve the issue.</div><div><span class=\"yellowfg\">Nov 5,  2:20 AM PST</span>&nbsp;Between 9:30 PM PST and 2:10 AM PST in the SA-EAST-1 Region, customers experienced increased delays in some metrics. During that time, alarms on delayed metrics may have transitioned into an INSUFFICIENT_DATA state. We have resolved the issue. Delayed metrics are in the process of backfilling in CloudWatch console graphs and for API retrieval. The CloudWatch service is operating normally.</div>",
+  "service": "cloudwatch-sa-east-1"
+}
