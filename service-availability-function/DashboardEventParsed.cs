@@ -157,8 +157,8 @@ namespace BAMCIS.ServiceAvailability
                 parsed.Summary = rawEvent.Summary;
                 parsed.Date = Int64.Parse(rawEvent.Date);
 
-                parsed.Start = ServiceUtilities.ConvertToUnixTimestamp(parsed.Timeline.Start);
-                parsed.End = ServiceUtilities.ConvertToUnixTimestamp(parsed.Timeline.End);
+                parsed.Start = parsed.Timeline.Start == default(DateTime) ? parsed.Date : ServiceUtilities.ConvertToUnixTimestamp(parsed.Timeline.Start);
+                parsed.End = parsed.Timeline.End == default(DateTime) ? parsed.Date : ServiceUtilities.ConvertToUnixTimestamp(parsed.Timeline.End);
 
                 return parsed;
             }

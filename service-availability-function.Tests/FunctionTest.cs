@@ -377,5 +377,35 @@ namespace BAMCIS.ServiceAvailability.Tests
             Assert.Equal(new DateTime(2016, 6, 5, 5, 25, 0, DateTimeKind.Utc), startEnd.Start);
             Assert.Equal(new DateTime(2016, 6, 5, 7, 45, 0, DateTimeKind.Utc), startEnd.End);
         }
+
+        [Fact]
+        public void TestEvent9WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-9.json"));
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(default(DateTime), startEnd.Start);
+            Assert.Equal(default(DateTime), startEnd.End);
+        }
+
+        [Fact]
+        public void TestEvent10WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-10.json"));
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2015, 11, 6, 5, 30, 0, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2015, 11, 6, 10, 10, 0, DateTimeKind.Utc), startEnd.End);
+        }
     }
 }

@@ -25,6 +25,11 @@ namespace BAMCIS.ServiceAvailability
         private static string timeStamp = @$"(?:[0-1]?[0-9]|2[0-3]):[0-5][0-9](?:\s?(?:AM|PM))?(?:\s?(?:{String.Join("|", Config.Instance.TimeZoneMap.Select(x => x.Key))}))?";
 
         /// <summary>
+        /// Captures the AM and PM from a timestamp like 12:10 AM or 3:53 PM
+        /// </summary>
+        private static Regex amOrPmRegex = new Regex($@"(?:[0-1]?[0-9]|2[0-3]):[0-5][0-9](?:\s?(AM|PM))?");
+
+        /// <summary>
         /// Regex that divides the descriptions into <div> sections and captures the timestamp and text portion
         /// </summary>
         private static Regex splitInParts = new Regex(@"(?:<div[^>]*>)<span[^>]*>\s?(.*?)\s?</span>(.*?)(?:</div>)", RegexOptions.Singleline); // Use single line because the text may contain \r\n in it
@@ -100,6 +105,11 @@ namespace BAMCIS.ServiceAvailability
         /// <returns></returns>
         public static SortedDictionary<DateTime, EventUpdate> GetDatedUpdates(DashboardEventRaw ev, DateTime baseDate)
         {
+            if (String.IsNullOrEmpty(ev.Description))
+            {
+                return new SortedDictionary<DateTime, EventUpdate>();
+            }
+
             Dictionary<string, string> updates = SplitUpdates(ev.Description);
 
             SortedDictionary<DateTime, EventUpdate> datedUpdates = new SortedDictionary<DateTime, EventUpdate>();
@@ -154,6 +164,11 @@ namespace BAMCIS.ServiceAvailability
         public static EventTimeline GetEventTimeline(DashboardEventRaw ev, DateTime baseDate)
         {
             EventTimeline timeline = new EventTimeline();
+
+            if (String.IsNullOrEmpty(ev.Description))
+            {
+                return timeline;
+            }
 
             timeline.Updates = GetDatedUpdates(ev, baseDate);
 
@@ -223,18 +238,35 @@ namespace BAMCIS.ServiceAvailability
                             end = ReplaceTimeZoneWithOffset($"{endDate} {baseDate.Year} {end}").Replace("  ", " "); // Replace any double spaces
                             endDt = DateTime.ParseExact(end, "MMMM d yyyy h:mm tt zzz", CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite);
                         }
-                        else
+                        else // There was no date provided, but the end date could still be the next day with the PST/PDT timezone (but not the next day
+                        // in UTC) like Between 9:30 PM PST and 2:10 AM PST, this will be checked later after the start time is parsed
                         {
                             end = ReplaceTimeZoneWithOffset($"{baseDate.Month}/{baseDate.Day}/{baseDate.Year} {end}").Replace("  ", " "); // Replace any double spaces
                             endDt = DateTime.Parse(end);
 
                             // It's possible that the times may be something like Between 9:37 AM and 3:48 PST,
                             // this lacks an AM/PM, and the end time will be interpreted to be 3:48 AM, so make
-                            // a check here to see if we need to add 12 hours to the time
+                            // a check here to see if we need to add 12 hours to the time, we may also need to add 24 hours
+                            // hours if the start is PM and the end is AM
                             if (DateTime.TryParse(ReplaceTimeZoneWithOffset($"{baseDate.ToString("MM/dd/yyyy")} {start}"), out DateTime temp1)
                                 && temp1 > endDt)
                             {
-                                endDt = endDt.AddHours(12);
+                                Match amOrPm1 = amOrPmRegex.Match(start);
+                                Match amOrPm2 = amOrPmRegex.Match(end);
+
+                                // If we found AM or PM in both strings and the start was PM and end was AM
+                                if (amOrPm1.Success && amOrPm2.Success && amOrPm1.Groups[1].Success && amOrPm2.Groups[1].Success &&
+                                    amOrPm1.Groups[1].Value.Equals("PM") && amOrPm2.Groups[1].Value.Equals("AM"))
+                                {
+                                        // Move up the end by one day to make it correct
+                                        endDt = endDt.AddDays(1);
+                                }
+                                else // The start wasn't PM and the end AM, so we interpret this to mean
+                                // that the start is AM and the end is PM on the same day, move the end
+                                // up 12 hours to put it in the right 24 hour format
+                                {
+                                    endDt = endDt.AddHours(12);
+                                }
                             }
                         }
 
@@ -409,6 +441,12 @@ namespace BAMCIS.ServiceAvailability
         public static DateTime GetBaseDate(DashboardEventRaw ev)
         {
             DateTime date = ServiceUtilities.ConvertFromUnixTimestamp(Int64.Parse(ev.Date));
+
+            if (String.IsNullOrEmpty(ev.Description))
+            {
+                return date;
+            }
+
             Match match = timestampStartsWithMonthRegex.Match(ev.Description);
 
             // If it  matches, then it wasn't just a time provided,
@@ -459,6 +497,11 @@ namespace BAMCIS.ServiceAvailability
         public static Dictionary<string, string> SplitUpdates(string description)
         {
             Dictionary<string, string> updates = new Dictionary<string, string>();
+
+            if (String.IsNullOrEmpty(description))
+            {
+                return updates;
+            }
 
             MatchCollection coll = splitInParts.Matches(description);
 

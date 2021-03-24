@@ -1,0 +1,9 @@
+﻿{
+  "service_name": "AWS CloudFormation (Sydney)",
+  "summary": "We are currently investigating increased API error rates in the AP-SOUTHEAST-2 Region",
+  "date": "1441232699",
+  "status": "1",
+  "details": "",
+  "description": null,
+  "service": "cloudformation-ap-southeast-2"
+}
