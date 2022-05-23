@@ -407,5 +407,23 @@ namespace BAMCIS.ServiceAvailability.Tests
             Assert.Equal(new DateTime(2015, 11, 6, 5, 30, 0, DateTimeKind.Utc), startEnd.Start);
             Assert.Equal(new DateTime(2015, 11, 6, 10, 10, 0, DateTimeKind.Utc), startEnd.End);
         }
+
+        // Tests when the last update time is posted in PDT, but rolls to next day in GMT
+        [Fact]
+        public void TestEvent11WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-11.json"));
+
+            //System.Diagnostics.Debugger.Break();
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2021, 12, 22, 12, 35, 0, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2021, 12, 23, 0, 22, 0, DateTimeKind.Utc), startEnd.End);
+        }
     }
 }
