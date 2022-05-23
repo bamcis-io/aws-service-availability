@@ -113,6 +113,7 @@ namespace BAMCIS.ServiceAvailability
             Dictionary<string, string> updates = SplitUpdates(ev.Description);
 
             SortedDictionary<DateTime, EventUpdate> datedUpdates = new SortedDictionary<DateTime, EventUpdate>();
+            string baseDateString = $"{baseDate.Year}-{baseDate.Month}-{baseDate.Day}";
 
             foreach (KeyValuePair<string, string> item in updates)
             {
@@ -121,9 +122,13 @@ namespace BAMCIS.ServiceAvailability
                 if (match.Success) // then was in h:mm tt zzz format, so we need to inject the year, month, day from the base date
                 {
                     string tz = timeZoneRegex.Match(match.Groups[0].Value).Value;
-                    string wholeString = ReplaceTimeZoneWithOffset(match.Groups[1].Value).Replace("  ", " "); // Replace any double spaces;      
+                    string wholeString = baseDateString + " " + ReplaceTimeZoneWithOffset(match.Groups[1].Value).Replace("  ", " "); // Replace any double spaces                                                                 
+
+                    // If the last update was too late in the day, changing to universal time may roll forward a
+                    // day, but by statically injecting from the base date, it wraps back around to the beginning
+                    // of the day, so we
+
                     DateTime dt = DateTime.Parse(wholeString, CultureInfo.InvariantCulture).ToUniversalTime();
-                    dt = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, dt.Hour, dt.Minute, dt.Second, DateTimeKind.Utc);
 
                     datedUpdates.Add(dt, new EventUpdate() { Update = item.Value, OriginalTimezone = tz, Timestamp = dt });
                 }
