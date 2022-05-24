@@ -113,7 +113,14 @@ namespace BAMCIS.ServiceAvailability
             Dictionary<string, string> updates = SplitUpdates(ev.Description);
 
             SortedDictionary<DateTime, EventUpdate> datedUpdates = new SortedDictionary<DateTime, EventUpdate>();
-            string baseDateString = $"{baseDate.Year}-{baseDate.Month}-{baseDate.Day}";
+
+            // Get TZ from first entry
+            KeyValuePair<string, string> first = updates.First();
+            string tz = timeZoneRegex.Match(first.Key).Value;
+            int offset = Config.Instance.TimeZoneAbbreviationMap[tz];
+            DateTime baseDateInCorrectTZ = baseDate.AddHours(offset);
+
+            string baseDateString = $"{baseDateInCorrectTZ.Year}-{baseDateInCorrectTZ.Month}-{baseDateInCorrectTZ.Day}";
 
             foreach (KeyValuePair<string, string> item in updates)
             {
@@ -121,7 +128,6 @@ namespace BAMCIS.ServiceAvailability
 
                 if (match.Success) // then was in h:mm tt zzz format, so we need to inject the year, month, day from the base date
                 {
-                    string tz = timeZoneRegex.Match(match.Groups[0].Value).Value;
                     string wholeString = baseDateString + " " + ReplaceTimeZoneWithOffset(match.Groups[1].Value).Replace("  ", " "); // Replace any double spaces                                                                 
 
                     // If the last update was too late in the day, changing to universal time may roll forward a
@@ -134,10 +140,9 @@ namespace BAMCIS.ServiceAvailability
                 }
                 else // then it way in MMM d, h:mm tt zzz, so we need to inject the year from the base date 
                 {
-                    string tz = timeZoneRegex.Match(match.Groups[0].Value).Value;
                     string wholeString = ReplaceTimeZoneWithOffset(item.Key).Replace("  ", " "); // Replace any double spaces;
-                    DateTime dt = DateTime.ParseExact(wholeString, monthDayTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite).ToUniversalTime();
-                    dt = new DateTime(baseDate.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, DateTimeKind.Utc);
+                    DateTime dt = DateTime.ParseExact(wholeString, monthDayTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite);
+                    dt = new DateTime(baseDateInCorrectTZ.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second).ToUniversalTime();
 
                     datedUpdates.Add(dt, new EventUpdate() { Update = item.Value, OriginalTimezone = tz, Timestamp = dt });
                 }
@@ -439,7 +444,7 @@ namespace BAMCIS.ServiceAvailability
         }
 
         /// <summary>
-        /// Retrieves the year, month, and day the event started
+        /// Retrieves the year, month, and day the event started in GMT.
         /// </summary>
         /// <param name="ev"></param>
         /// <returns></returns>
@@ -492,6 +497,23 @@ namespace BAMCIS.ServiceAvailability
             }
 
             return input;
+        }
+
+        /// <summary>
+        /// Converts a timezone like EST to Eastern Standard Time
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static int ReplaceTimeZoneWithFullName(string input)
+        {
+            if (Config.Instance.TimeZoneAbbreviationMap.ContainsKey(input))
+            {
+                return Config.Instance.TimeZoneAbbreviationMap[input];
+            }
+            else
+            {
+                throw new TimeZoneNotFoundException($"Could not find a timezone entry for {input}.");
+            }
         }
 
         /// <summary>
