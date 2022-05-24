@@ -181,34 +181,6 @@ namespace BAMCIS.ServiceAvailability.Tests
         }
 
         [Fact]
-        public void DateMismatchTest()
-        {
-            // ARRANGE
-            DashboardEventRaw ev = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("date_mismatch.json"));
-            DateTime dt = ServiceUtilities.ConvertFromUnixTimestamp(Int64.Parse(ev.Date));
-
-            // ACT
-            DateTime baseDate = EventTimelineUtilities.GetBaseDate(ev);
-
-            // ASSERT
-            Assert.Equal(new DateTime(2019, 5, 10, 0, 0, 0, DateTimeKind.Utc), baseDate);
-            Assert.NotEqual(dt.Day, baseDate.Day);
-        }
-
-        [Fact]
-        public void DateNoMismatchTest()
-        {
-            // ARRANGE
-            DashboardEventRaw ev = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("date_no_mismatch.json"));
-
-            // ACT
-            DateTime baseDate = EventTimelineUtilities.GetBaseDate(ev);
-
-            // ASSERT
-            Assert.Equal(new DateTime(2019, 5, 10, 0, 0, 0, DateTimeKind.Utc), baseDate);
-        }
-
-        [Fact]
         public void TestAllData()
         {
             // ARRANGE
@@ -404,8 +376,15 @@ namespace BAMCIS.ServiceAvailability.Tests
             EventTimeline startEnd = parsed.Timeline;
 
             // ASSERT
-            Assert.Equal(new DateTime(2015, 11, 6, 5, 30, 0, DateTimeKind.Utc), startEnd.Start);
-            Assert.Equal(new DateTime(2015, 11, 6, 10, 10, 0, DateTimeKind.Utc), startEnd.End);
+            Assert.Equal(new DateTime(2015, 11, 5, 5, 30, 0, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2015, 11, 5, 10, 10, 0, DateTimeKind.Utc), startEnd.End);
+
+
+            Assert.Equal(new DateTime(2015, 11, 5, 6, 12, 0, DateTimeKind.Utc), startEnd.Updates.First().Key);
+            Assert.Equal(new DateTime(2015, 11, 5, 6, 32, 0, DateTimeKind.Utc), startEnd.Updates.Skip(1).First().Key);
+            Assert.Equal(new DateTime(2015, 11, 5, 7, 16, 0, DateTimeKind.Utc), startEnd.Updates.Skip(2).First().Key);
+            Assert.Equal(new DateTime(2015, 11, 5, 10, 8, 0, DateTimeKind.Utc), startEnd.Updates.Skip(3).First().Key);
+            Assert.Equal(new DateTime(2015, 11, 5, 10, 20, 0, DateTimeKind.Utc), startEnd.Updates.Last().Key);
         }
 
         // Tests when the last update time is posted in PDT, but rolls to next day in GMT
@@ -420,8 +399,8 @@ namespace BAMCIS.ServiceAvailability.Tests
             EventTimeline startEnd = parsed.Timeline;
 
             // ASSERT
-            Assert.Equal(new DateTime(2021, 12, 21, 12, 35, 0, DateTimeKind.Utc), startEnd.Start);
-            Assert.Equal(new DateTime(2021, 12, 22, 0, 22, 0, DateTimeKind.Utc), startEnd.End);
+            Assert.Equal(new DateTime(2021, 12, 22, 12, 11, 0, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2021, 12, 23, 0, 22, 0, DateTimeKind.Utc), startEnd.End);
         }
 
         // Testing the correct calculation of elapsed time
@@ -452,8 +431,55 @@ namespace BAMCIS.ServiceAvailability.Tests
             EventTimeline startEnd = parsed.Timeline;
 
             // ASSERT
-            Assert.Equal(new DateTime(2022, 4, 1, 2, 18, 00, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2022, 4, 1, 0, 3, 00, DateTimeKind.Utc), startEnd.Start);
             Assert.Equal(new DateTime(2022, 4, 1, 8, 45, 0, DateTimeKind.Utc), startEnd.End);
+        }
+
+        // Has two updates with "Starting at 5:27 PM PDT"
+        [Fact]
+        public void TestEvent14WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-14.json"));
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2019, 10, 5, 0, 27, 00, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2019, 10, 5, 5, 19, 0, DateTimeKind.Utc), startEnd.End);
+        }
+
+        // Starting at 9:37 PM PDT on October 8th,
+        [Fact]
+        public void TestEvent15WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-15.json"));
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2020, 10, 9, 4, 37, 00, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2020, 10, 9, 18, 54, 0, DateTimeKind.Utc), startEnd.End);
+        }
+
+        [Fact]
+        public void TestEvent16WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-16.json"));
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2019, 5, 10, 17, 50, 00, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2019, 5, 11, 9, 18, 0, DateTimeKind.Utc), startEnd.End);
         }
     }
 }
