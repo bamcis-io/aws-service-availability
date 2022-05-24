@@ -76,6 +76,13 @@ namespace BAMCIS.ServiceAvailability
          */
         private static Regex betweenXandYWithDatesRegex = new Regex($@"\b[bB]etween\s+((?:{months})\s+(?:(?:3[0-1]|[1-2][0-9]|[0-9])(?:th|nd|st|rd)?),?(?:\s?\d{{4}})?(?:\s?at)?\s+{timeStamp})\s+and\s+((?:{months})\s+(?:(?:3[0-1]|[1-2][0-9]|[0-9])(?:th|nd|st|rd)?),?(?:\s?\d{{4}})?(?:\s?at)?\s+{timeStamp})"); // This has 2 capture groups
 
+        /*
+         * Captures start times like
+         * Starting at 5:03 PM PDT, we
+         * Starting at 9:37 PM PDT on October 8th,
+         */
+        private static Regex startingAt = new Regex($@"\b[sS]tarting\s+at\s+({timeStamp})(?:\s+on\s+(({months})\s+(3[0-1]|[1-2][0-9]|[0-9]))(?:th|nd|st|rd)?)?");
+
         /// <summary>
         /// Used to remove "st", "rd", "nd", "th" from dates like January 7th or October 23rd
         /// </summary>
@@ -101,7 +108,7 @@ namespace BAMCIS.ServiceAvailability
         /// description as the value. The dates are presented in UTC.
         /// </summary>
         /// <param name="ev"></param>
-        /// <param name="baseDate"></param>
+        /// <param name="baseDate">The base date (date of posting) in UTC</param>
         /// <returns></returns>
         public static SortedDictionary<DateTime, EventUpdate> GetDatedUpdates(DashboardEventRaw ev, DateTime baseDate)
         {
@@ -114,14 +121,12 @@ namespace BAMCIS.ServiceAvailability
 
             SortedDictionary<DateTime, EventUpdate> datedUpdates = new SortedDictionary<DateTime, EventUpdate>();
 
-            // Get TZ from first entry
-            KeyValuePair<string, string> first = updates.First();
-            string tz = timeZoneRegex.Match(first.Key).Value;
-            int offset = Config.Instance.TimeZoneAbbreviationMap[tz];
-            DateTime baseDateInCorrectTZ = baseDate.AddHours(offset);
-
+            // Convert the base date to the same TZ as the other entries
+            string tz = timeZoneRegex.Match(updates.First().Key).Value;
+            DateTime baseDateInCorrectTZ = ConvertBaseDateFromUtc(baseDate, tz);
             string baseDateString = $"{baseDateInCorrectTZ.Year}-{baseDateInCorrectTZ.Month}-{baseDateInCorrectTZ.Day}";
 
+            // All other updates will be relative to the base date
             foreach (KeyValuePair<string, string> item in updates)
             {
                 Match match = timestampStartsWithTimeRegex.Match(item.Key);
@@ -140,9 +145,11 @@ namespace BAMCIS.ServiceAvailability
                 }
                 else // then it way in MMM d, h:mm tt zzz, so we need to inject the year from the base date 
                 {
-                    string wholeString = ReplaceTimeZoneWithOffset(item.Key).Replace("  ", " "); // Replace any double spaces;
-                    DateTime dt = DateTime.ParseExact(wholeString, monthDayTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite);
-                    dt = new DateTime(baseDateInCorrectTZ.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second).ToUniversalTime();
+                    string wholeString = ReplaceTimeZoneWithOffset(item.Key).Replace("  ", " ").Replace(",", ""); // Replace any double spaces;
+                    List<string> temp = wholeString.Split(" ").ToList();
+                    temp.Insert(2, baseDateInCorrectTZ.Year.ToString());
+                    string stringToParse = String.Join(" ", temp);
+                    DateTime dt = DateTime.ParseExact(stringToParse, "MMM d yyyy h:mm tt zzz", CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite).ToUniversalTime();
 
                     datedUpdates.Add(dt, new EventUpdate() { Update = item.Value, OriginalTimezone = tz, Timestamp = dt });
                 }
@@ -150,6 +157,8 @@ namespace BAMCIS.ServiceAvailability
 
             return datedUpdates;
         }
+
+       
 
         /// <summary>
         /// Converts the description field into a dictionary with timestamps as the keys and the text 
@@ -181,6 +190,12 @@ namespace BAMCIS.ServiceAvailability
             }
 
             timeline.Updates = GetDatedUpdates(ev, baseDate);
+
+            // Put base date into same TZ as other dates
+            DateTime baseDateInCorrectTZ = ConvertBaseDateFromUtc(baseDate, timeline.Updates.First().Value.OriginalTimezone);
+
+            string baseDateStringYearMonthDay = $"{baseDateInCorrectTZ.Year}-{baseDateInCorrectTZ.Month}-{baseDateInCorrectTZ.Day}";
+            string baseDateStringMonthDayYear = $"{baseDateInCorrectTZ.Month}/{baseDateInCorrectTZ.Day}/{baseDateInCorrectTZ.Year}";
 
             bool found = false;
 
@@ -245,20 +260,20 @@ namespace BAMCIS.ServiceAvailability
                             // construct parseable date string
 
                             // MMMM d yyyy h:mm tt zzz
-                            end = ReplaceTimeZoneWithOffset($"{endDate} {baseDate.Year} {end}").Replace("  ", " "); // Replace any double spaces
+                            end = ReplaceTimeZoneWithOffset($"{endDate} {baseDateInCorrectTZ.Year} {end}").Replace("  ", " "); // Replace any double spaces
                             endDt = DateTime.ParseExact(end, "MMMM d yyyy h:mm tt zzz", CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite);
                         }
                         else // There was no date provided, but the end date could still be the next day with the PST/PDT timezone (but not the next day
                         // in UTC) like Between 9:30 PM PST and 2:10 AM PST, this will be checked later after the start time is parsed
                         {
-                            end = ReplaceTimeZoneWithOffset($"{baseDate.Month}/{baseDate.Day}/{baseDate.Year} {end}").Replace("  ", " "); // Replace any double spaces
+                            end = ReplaceTimeZoneWithOffset($"{baseDateStringMonthDayYear} {end}").Replace("  ", " "); // Replace any double spaces
                             endDt = DateTime.Parse(end);
 
                             // It's possible that the times may be something like Between 9:37 AM and 3:48 PST,
                             // this lacks an AM/PM, and the end time will be interpreted to be 3:48 AM, so make
                             // a check here to see if we need to add 12 hours to the time, we may also need to add 24 hours
                             // hours if the start is PM and the end is AM
-                            if (DateTime.TryParse(ReplaceTimeZoneWithOffset($"{baseDate.ToString("MM/dd/yyyy")} {start}"), out DateTime temp1)
+                            if (DateTime.TryParse(ReplaceTimeZoneWithOffset($"{baseDateInCorrectTZ.ToString("MM/dd/yyyy")} {start}"), out DateTime temp1)
                                 && temp1 > endDt)
                             {
                                 Match amOrPm1 = amOrPmRegex.Match(start);
@@ -289,7 +304,7 @@ namespace BAMCIS.ServiceAvailability
                             // construct parseable date string
 
                             // MMMM d yyyy h:mm tt zzz
-                            start = ReplaceTimeZoneWithOffset($"{startDate} {baseDate.Year} {start}").Replace("  ", " "); // Replace any double spaces
+                            start = ReplaceTimeZoneWithOffset($"{startDate} {baseDateInCorrectTZ.Year} {start}").Replace("  ", " "); // Replace any double spaces
                             startDt = DateTime.ParseExact(start, "MMMM d yyyy h:mm tt zzz", CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite);
                         }
                         else // start is only HH:mm tt zzz
@@ -305,12 +320,12 @@ namespace BAMCIS.ServiceAvailability
                                 string endDate = matchItem.Groups[4].Value;   // Will pull out something like August 8th
                                 endDate = removeDateOrdinalRegex.Replace(endDate, "$1"); // Is now August 8
 
-                                start = ReplaceTimeZoneWithOffset($"{endDate} {baseDate.Year} {start}").Replace("  ", " "); // Replace any double spaces
+                                start = ReplaceTimeZoneWithOffset($"{endDate} {baseDateInCorrectTZ.Year} {start}").Replace("  ", " "); // Replace any double spaces
                                 startDt = DateTime.ParseExact(start, "MMMM d yyyy h:mm tt zzz", CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite);
                             }
                             else
                             {
-                                start = ReplaceTimeZoneWithOffset($"{baseDate.Month}/{baseDate.Day}/{baseDate.Year} {start}").Replace("  ", " "); // Replace any double spaces
+                                start = ReplaceTimeZoneWithOffset($"{baseDateStringMonthDayYear} {start}").Replace("  ", " "); // Replace any double spaces
                                 startDt = DateTime.Parse(start);
                             }
                         }
@@ -386,7 +401,7 @@ namespace BAMCIS.ServiceAvailability
                     else
                     {
                         // Parsed without a year, so we need to update to the base year
-                        startDt = new DateTime(baseDate.Year, startDt.Month, startDt.Day, startDt.Hour, startDt.Minute, startDt.Second); // Don't set it to UTC
+                        startDt = new DateTime(baseDateInCorrectTZ.Year, startDt.Month, startDt.Day, startDt.Hour, startDt.Minute, startDt.Second); // Don't set it to UTC
                     }
 
                     if (!DateTime.TryParseExact(end, "MMMM d h:mm tt zzz", CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite, out endDt))
@@ -396,11 +411,44 @@ namespace BAMCIS.ServiceAvailability
                     else
                     {
                         // Parsed without a year, so we need to update to the base year
-                        endDt = new DateTime(baseDate.Year, endDt.Month, endDt.Day, endDt.Hour, endDt.Minute, endDt.Second); // Don't set it to UTC
+                        endDt = new DateTime(baseDateInCorrectTZ.Year, endDt.Month, endDt.Day, endDt.Hour, endDt.Minute, endDt.Second); // Don't set it to UTC
                     }
 
                     found = true;
                     timeline.Intervals.Add(startDt, new TimeInterval(startDt.ToUniversalTime(), endDt.ToUniversalTime()));
+                }
+                else if ((match = startingAt.Match(item.Value.Update)).Success) // It's possible we find this more than once
+                {
+                    // Starting at 12:15 AM PDT
+                    string start = match.Groups[1].Value;
+
+                    if (!timeZoneRegex.IsMatch(start)) // Make sure start has a TZ as well
+                    {
+                        // start += $" {item.Value.OriginalTimezone}"; Not sure the item will have original timezone, need
+                        // to look into why i'm using the default in the first if, but the original in the second else if
+                        start += $" {Config.Instance.DefaultTimeZone}";
+                    }
+
+                    if (match.Groups[2].Success) // There was a month and day
+                    {
+                        string month = match.Groups[3].Value;
+                        string day = match.Groups[4].Value;
+
+                        start = ReplaceTimeZoneWithOffset($"{month} {day} {baseDateInCorrectTZ.Year} {start}");
+                    }
+                    else
+                    {
+                        start = ReplaceTimeZoneWithOffset($"{baseDateStringMonthDayYear} {start}").Replace("  ", " "); // Replace any double spaces
+                    }
+                    
+                    DateTime startDt = DateTime.Parse(start).ToUniversalTime();
+
+                    if (!timeline.Intervals.ContainsKey(startDt))
+                    {
+                        timeline.Intervals.Add(startDt, new TimeInterval(startDt.ToUniversalTime(), timeline.Updates.Last().Key));
+                    }
+
+                    found = true;
                 }
             }
 
@@ -412,7 +460,7 @@ namespace BAMCIS.ServiceAvailability
                 timeline.End = timeline.Intervals.Last().Value.End;
             }
             else
-            {
+            { 
                 if (timeline.Updates.Any())
                 {
                     timeline.Start = timeline.Updates.First().Key;
@@ -430,6 +478,12 @@ namespace BAMCIS.ServiceAvailability
             return timeline;
         }
 
+        private static KeyValuePair<DateTime, TimeInterval> GetStartAtDate(string update)
+        {
+
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Gets the event timeline, which includes the set of updates, the start time,
         /// and the end time.
@@ -444,19 +498,28 @@ namespace BAMCIS.ServiceAvailability
         }
 
         /// <summary>
-        /// Retrieves the year, month, and day the event started in GMT.
+        /// Provides a DateTime of the event posting in UTC/GMT.
         /// </summary>
         /// <param name="ev"></param>
         /// <returns></returns>
         public static DateTime GetBaseDate(DashboardEventRaw ev)
         {
-            DateTime date = ServiceUtilities.ConvertFromUnixTimestamp(Int64.Parse(ev.Date));
+            return ServiceUtilities.ConvertFromUnixTimestamp(Int64.Parse(ev.Date));
 
+            /* This shouldn't be necessary, even if
+             * this happens, we still capture the
+             * update dates correctly and can still identify
+             * the correct start and end, we just need something
+             * to be relative to for non-dated updates, and they
+             * are relative to the base date, not the first
+             * update
+             * 
             if (String.IsNullOrEmpty(ev.Description))
             {
                 return date;
             }
 
+            
             Match match = timestampStartsWithMonthRegex.Match(ev.Description);
 
             // If it  matches, then it wasn't just a time provided,
@@ -464,16 +527,40 @@ namespace BAMCIS.ServiceAvailability
             //<div><span class="yellowfg">May 10, 11:21 AM PDT</span>
             //<div><span class="yellowfg">Oct 7, 7:00 PM PDT</span>
             //<div><span class="yellowfg">Nov 28, 12:05 AM PST</span>
+            // This happens for this event, 1557569326, which is a timestamp for 5/11/2019 10:08:46 GMT, so the first update
+            // is before
 
             if (match.Success)
             {
-                string str = match.Groups[1].Value;
-                str = ReplaceTimeZoneWithOffset(str).Replace("  ", " "); // Some have two spaces after the comma, which breaks ParseExact
-                DateTime dt = DateTime.ParseExact(str, monthDayTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite).ToUniversalTime();
-                date = new DateTime(date.Year, dt.Month, dt.Day, 0, 0, 0, DateTimeKind.Utc);
+                string str = ReplaceTimeZoneWithOffset(match.Groups[1].Value.Replace("  ", " ").Replace(",", "")); // Gets the full date: May 10 11:21 AM -08:00
+                List<string> temp = str.Split(" ").ToList();
+                temp.Insert(2, date.Year.ToString());
+                str = String.Join(" ", temp);
+                date = DateTime.ParseExact(str, "MMM dd yyyy h:mm tt zzz", CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite).ToUniversalTime();
             }
 
             return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+            */
+        }
+
+        /// <summary>
+        /// Converts the base date, which is expected in UTC, to the specified
+        /// time zone. If the date time is in a different TZ, it is returned
+        /// as is without conversion.
+        /// </summary>
+        /// <param name="baseDate">The base date in UTC</param>
+        /// <param name="tz">A timezone abbreviation like PDT or EST</param>
+        /// <returns></returns>
+        public static DateTime ConvertBaseDateFromUtc(DateTime baseDate, string tz)
+        {
+            if (baseDate.Kind == DateTimeKind.Utc)
+            {
+                return baseDate.AddHours(Config.Instance.TimeZoneAbbreviationMap[tz]);
+            }
+            else
+            {
+                return baseDate;
+            }
         }
 
         /// <summary>
@@ -497,23 +584,6 @@ namespace BAMCIS.ServiceAvailability
             }
 
             return input;
-        }
-
-        /// <summary>
-        /// Converts a timezone like EST to Eastern Standard Time
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static int ReplaceTimeZoneWithFullName(string input)
-        {
-            if (Config.Instance.TimeZoneAbbreviationMap.ContainsKey(input))
-            {
-                return Config.Instance.TimeZoneAbbreviationMap[input];
-            }
-            else
-            {
-                throw new TimeZoneNotFoundException($"Could not find a timezone entry for {input}.");
-            }
         }
 
         /// <summary>
