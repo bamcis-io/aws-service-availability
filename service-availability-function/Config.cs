@@ -66,6 +66,25 @@ namespace BAMCIS.ServiceAvailability
             {"UTC", "-00:00" }
         };
 
+        private static readonly Dictionary<string, int> _DEFAULT_TIME_ZONE_ABBR_MAP = new Dictionary<string, int>()
+        {
+            {"HAST", -10 },
+            {"HADT", -9 },
+            {"AKST", -9 },
+            {"AKDT", -8 },
+            {"PST", -8 },
+            {"PDT", -7 },
+            {"MST", -7 },
+            {"MDT", -6 },
+            {"CST", -6 },
+            {"CDT", -5 },
+            {"EST", -5 },
+            {"EDT", -4 },
+            {"GMT", 0 },
+            {"UTC", 0 }
+        };
+
+
         /// <summary>
         /// The regex to match a time zone in a description
         /// </summary>
@@ -213,10 +232,15 @@ namespace BAMCIS.ServiceAvailability
         public List<string> ServicesWithoutRegion { get; set; }
 
         /// <summary>
-        /// A map of timezones to GMT offsets
+        /// A map of timezones to GMT offsets as strings
         /// </summary>
         public Dictionary<string, string> TimeZoneMap { get; set; }
         
+        /// <summary>
+        /// A map of timezone abbreviations to GMT offset as integer
+        /// </summary>
+        public Dictionary<string, int> TimeZoneAbbreviationMap { get; set; }
+
         /// <summary>
         /// When the singleton is accessed the first time, it reads the config file
         /// and loads it as a new object to the private instance
@@ -313,6 +337,11 @@ namespace BAMCIS.ServiceAvailability
             if (String.IsNullOrEmpty(_instance.SNSTopic))
             {
                 _instance.SNSTopic = Environment.GetEnvironmentVariable("SNSTopic");
+            }
+
+            if (_instance.TimeZoneAbbreviationMap == null)
+            {
+                _instance.TimeZoneAbbreviationMap = _DEFAULT_TIME_ZONE_ABBR_MAP;
             }
         }
 

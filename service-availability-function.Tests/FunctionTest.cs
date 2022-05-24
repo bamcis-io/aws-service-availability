@@ -415,15 +415,45 @@ namespace BAMCIS.ServiceAvailability.Tests
             // ARRANGE
             DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-11.json"));
 
-            //System.Diagnostics.Debugger.Break();
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2021, 12, 21, 12, 35, 0, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2021, 12, 22, 0, 22, 0, DateTimeKind.Utc), startEnd.End);
+        }
+
+        // Testing the correct calculation of elapsed time
+        [Fact]
+        public void TestEvent12WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-12.json"));
 
             // ACT
             DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
             EventTimeline startEnd = parsed.Timeline;
 
             // ASSERT
-            Assert.Equal(new DateTime(2021, 12, 22, 12, 35, 0, DateTimeKind.Utc), startEnd.Start);
-            Assert.Equal(new DateTime(2021, 12, 23, 0, 22, 0, DateTimeKind.Utc), startEnd.End);
+            Assert.Equal(new DateTime(2022, 5, 17, 22, 58, 0, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2022, 5, 18, 0, 28, 0, DateTimeKind.Utc), startEnd.End);
+        }
+
+        // Make sure start and end are correctly calculated when updates span multiple days.
+        [Fact]
+        public void TestEvent13WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-13.json"));
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2022, 4, 1, 2, 18, 00, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2022, 4, 1, 8, 45, 0, DateTimeKind.Utc), startEnd.End);
         }
     }
 }
