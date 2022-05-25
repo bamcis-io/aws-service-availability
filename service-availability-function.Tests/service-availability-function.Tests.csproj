@@ -66,6 +66,12 @@
     <None Update="test-event-16.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="test-event-17.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="test-event-18.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="test-event-2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
