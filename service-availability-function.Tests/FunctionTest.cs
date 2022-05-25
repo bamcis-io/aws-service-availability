@@ -433,6 +433,7 @@ namespace BAMCIS.ServiceAvailability.Tests
             // ASSERT
             Assert.Equal(new DateTime(2022, 4, 1, 0, 3, 00, DateTimeKind.Utc), startEnd.Start);
             Assert.Equal(new DateTime(2022, 4, 1, 8, 45, 0, DateTimeKind.Utc), startEnd.End);
+            Assert.Equal(new DateTime(2022, 4, 1, 2, 18, 8, DateTimeKind.Utc), EventTimelineUtilities.GetBaseDate(data));
         }
 
         // Has two updates with "Starting at 5:27 PM PDT"
@@ -480,6 +481,38 @@ namespace BAMCIS.ServiceAvailability.Tests
             // ASSERT
             Assert.Equal(new DateTime(2019, 5, 10, 17, 50, 00, DateTimeKind.Utc), startEnd.Start);
             Assert.Equal(new DateTime(2019, 5, 11, 9, 18, 0, DateTimeKind.Utc), startEnd.End);
+        }
+
+        [Fact]
+        public void TestEvent17WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-17.json"));
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2022, 4, 6, 8, 23, 00, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2022, 4, 6, 9, 46, 0, DateTimeKind.Utc), startEnd.End);
+            Assert.Equal(new DateTime(2022, 4, 6, 9, 46, 31, DateTimeKind.Utc), EventTimelineUtilities.GetBaseDate(data));
+        }
+
+        [Fact]
+        public void TestEvent18WithParse()
+        {
+            // ARRANGE
+            DashboardEventRaw data = JsonConvert.DeserializeObject<DashboardEventRaw>(File.ReadAllText("test-event-18.json"));
+
+            // ACT
+            DashboardEventParsed parsed = DashboardEventParsed.FromRawEvent(data);
+            EventTimeline startEnd = parsed.Timeline;
+
+            // ASSERT
+            Assert.Equal(new DateTime(2022, 5, 4, 2, 17, 00, DateTimeKind.Utc), startEnd.Start);
+            Assert.Equal(new DateTime(2022, 5, 4, 3, 41, 0, DateTimeKind.Utc), startEnd.End);
+            Assert.Equal(new DateTime(2022, 5, 4, 3, 17, 59, DateTimeKind.Utc), EventTimelineUtilities.GetBaseDate(data));
         }
     }
 }
